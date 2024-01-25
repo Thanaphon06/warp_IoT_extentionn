@@ -7,166 +7,262 @@
     icon: "/static/beetlecar.png",
     color: "#4A7CCC",
     blocks: [
-       {
-            xml: `
-                <block type="netpie_connect">
-                    <value name="device_id">
-                        <shadow type="text">
-                            <field name="TEXT">00000000-0000-0000-0000-000000000000</field>
-                        </shadow>
-                    </value>
-                    <value name="device_token">
-                        <shadow type="text">
-                            <field name="TEXT">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</field>
-                        </shadow>
-                    </value>
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_on_connected">
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_on_disconnected">
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_publish">
-                    <value name="topic">
-                        <shadow type="text">
-                            <field name="TEXT"></field>
-                        </shadow>
-                    </value>
-                    <value name="payload">
-                        <shadow type="text">
-                            <field name="TEXT">ON</field>
-                        </shadow>
-                    </value>
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_subscribe">
-                    <value name="topic">
-                        <shadow type="text">
-                            <field name="TEXT"></field>
-                        </shadow>
-                    </value>
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_on_reveived_msg">
-                    <value name="topic">
-                        <shadow type="text">
-                            <field name="TEXT"></field>
-                        </shadow>
-                    </value>
+                    
+                        {
+                            xml: '<label text="Motor"></label>'
+                            
+                        },
+                        
+                        //"switch_on_release_beetle",
+                        //"switch_is_press_beetle",
+                        //"switch_is_release_beetle",
+                        "switch_get_value_beetle",
+                        
+                        
+                        
+                        
+                                                 //Motor 2.0 End ///////////////////////////////////
+                                                {
+                                                    xml: `
+                                                    <block type="new_motor">
+                                                        <field name="move">0</field>
+                                                        <field name="speed">180</field>
+                                                    </block>
+                                                `
+                                                },
+                                                {
+                                                    xml: `
+                                                    <block type="new_motor2">
+                                                        <field name="move">0</field>
+                                                        <field name="speed">180</field>
+                                                        <field name="time">0</field>
+                                                    </block>
+                                                `
+                                                },
+                                                {
+                                                    xml: `
+                                                    <block type="new_motor3">
+                                                        <field name="motor">0</field>
+                                                        <field name="move">0</field>
+                                                        <field name="speed">200</field>
+                                                    </block>
+                                                ` 
+                                                },
 
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_msg_payload">
-                    <value name="datatype">
-                    </value>
+                                                "newstopMotor",
 
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_write_shadow_field">
-                    <value name="field">
-                        <shadow type="text">
-                            <field name="TEXT">home.bedroom.temp</field>
-                        </shadow>
-                    </value>
+                                                //Motor 2.0 End ///////////////////////////////////
 
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_read_shadow">
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_on_shadow_updated">
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_shadow_field">
-                    <value name="field">
-                        <shadow type="text">
-                            <field name="TEXT">home.bedroom.temp</field>
-                        </shadow>
-                    </value>
 
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_on_reveived_private_msg">
-                    <value name="topic">
-                        <shadow type="text">
-                            <field name="TEXT"></field>
-                        </shadow>
-                    </value>
+                                                //Ultrasonic Start //////////////////////////// 
+                                                {
+                                                    xml: '<label text="Ultrasonic"></label>'
+                                                },
+                                               'ultra_read',
+                                                {
+                                                    xml:`    
+                                                        <block type="ultra_read_if">
+                                                            <value name="math">
+                                                                <shadow type="math_number">
+                                                                    <field name="NUM">>=</field>
+                                                                </shadow>
+                                                            </value>
+                                                            <value name="read_num">
+                                                                <shadow type="math_number">
+                                                                    <field name="NUM">5</field>
+                                                                </shadow>
+                                                            </value>
+                                                        </block>`
+                                                },
+                                                //Ultrasonic End ///////////////////////////////
+                                                
+                                                //Switch START /////////////////////////////////
+                                                {
+                                                    xml: '<label text="Switch"></label>',
+                                                },
+                                                "switch_on_press_beetle",
+                                                {
+                                                    xml:`
+                                                        <block type = "switch">
+                                                            <value name = "pin">
+                                                                <shadow type = "math_number">
+                                                                    <field name = "NUM">SW A</field>
+                                                                </shadow>
+                                                            </value>
+                                                        </block>
+                                                    `
+                                                },
+                                                
+                                                {
+                                                    xml: '<label text="Toggle Switch"></label>',
+                                                },
 
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_private_msg_payload">
-                    <value name="datatype">
-                    </value>
+                                                {
+                                                    xml:`
+                                                        <block type = "switch_toggle">
+                                                            <value name = "pin">
+                                                                <shadow type = "math_number">
+                                                                    <field name = "NUM">SW A</field>
+                                                                </shadow>
+                                                            </value>
+                                                        </block>
+                                                    `
+                                                },
+                                                //Switch STOP /////////////////////////////////
+                                  
+                                                //servo Start//////////////////////////////////
+                                                {
+                                                    xml: '<label text="Servo"></label>', 
+                                                },
 
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_text">
-                    <value name="value">
-                    </value>
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_number">
-                    <value name="value">
-                    </value>
-                </block>
-            `
-        },
-        {
-            xml: `
-                <block type="netpie_boolean">
-                    <value name="value">
-                    </value>
-                </block>
-            `
-        }
-    ],
-    chip: [
-        "ESP32",
-        "RP2-WiFi"
-    ]
+                                            
+                                                {
+                                                    xml: `
+                                                        <block type="servo">  
+                                                            <value name="pin">
+                                                                <shadow type="math_number">
+                                                                    <field name="NUM">16</field>
+                                                                </shadow>
+                                                            </value>
+                                                            <value name="angle">
+                                                                <shadow type="math_number">
+                                                                    <field name="NUM">90</field>
+                                                                </shadow>
+                                                            </value>
+                                                        </block>
+                                                    `
+                                                },
+                                                //servo End //////////////////////////////////
+
+                                                //LED Start //////////////////////////////////
+
+                                                {
+                                                    xml: '<label text="LED"></label>'
+                                                },
+                                                {
+                                                    xml: `
+                                                    <block type="led_left">
+                                                        <value name="pin_trig">
+                                                            <shadow type="math_number">
+                                                                <field name="NUM">Left ON</field>
+                                                            </shadow>
+                                                        </value>
+                                                    </block>
+                                                `
+                                                },
+                                                {
+                                                    xml: `
+                                                    <block type="led_right">
+                                                        <value name="pin_trig">
+                                                            <shadow type="math_number">
+                                                                <field name="NUM">Right ON</field>
+                                                            </shadow>
+                                                        </value>
+                                                    </block>
+                                                `
+                                                },
+                                                //LED END //////////////////////////////////
+                        
+                                                //NeoPixel  START ///////////////////////////
+                                                {
+                                                    xml:'<label text="NeoPixel"></label>'
+                                                },
+
+                                                    "neopixel_fill_color1",
+                                                    "neopixel_off",
+                                                    "neopixel_toggle",
+                                                    "rainbow_neo",
+                        
+                                            //NeoPixel  END ///////////////////////////
+
+                                            //Buzzer  START ///////////////////////////
+                                            {
+                                                xml: '<label text="Buzzer"></label>', 
+                                            },
+                         
+                                            {
+                                                xml: `
+                                                    <block type="buzzer1">
+                                                        <value name="freq">
+                                                            <shadow type="math_number">
+                                                                <field name="NUM">1000</field>
+                                                            </shadow>
+                                                        </value>
+                                                        <value name="time">
+                                                            <shadow type="math_number">
+                                                                <field name="NUM">1</field>
+                                                            </shadow>
+                                                        </value>
+                                                    </block>
+                                                `
+                                            },
+                                            {
+                                                xml: `
+                                                    <block type="buzzer2">
+                                                        <value name="freq">
+                                                            <shadow type="math_number">
+                                                                <field name="NUM">1000</field>
+                                                            </shadow>
+                                                        </value>
+                                                    </block>
+                                                `
+                                            },
+                                                "buzzer3",
+                                            {
+                                                xml: `
+                                                    <block type="buz_play_music">
+                                                        <value name="music">
+                                                            <shadow type="math_number">
+                                                                <field name="NUM">Happy Birth Day</field>
+                                                            </shadow>
+                                                        </value>
+                                                    </block>
+                                                `
+                                            },
+                                            //Buzzer End /////////////////////////////////
+
+                                            //Line Tracking START ////////////////////////
+                                            {
+                                            xml: '<label text="Line Tracking"></label>'
+                                            },
+                                            {
+                                                xml: `
+                                                    <block type="linetracking_threshold">
+                                                        <field name="black">0</field>
+                                                        <field name="white">0</field>
+                                                    </block>
+                                                `
+                                            },
+                                            
+                                            {
+                                                xml: `
+                                                    <block type="linetracking_sensor">
+                                                        <field name="sensor">0</field>
+                                                        <field name="operator">0</field>
+                                                    </block>
+                                                `
+                                            },
+                                            //Line Tracking END ////////////////////////
+
+                                            //IR START /////////////////////////////////
+                                            {
+                                                xml: '<label text="IR Signal"></label>',
+                                            },
+                                                    "ir_sig_new2",
+                                                    "ir_comman_if",
+                                                    "ir_read",
+
+                                             //IR end //////////////////////////////////
+
+                                            //Task START ////////////////////////////////
+
+                                            {
+                                                xml: '<label text="Task"></label>',
+                                            },
+                                                    "run_in_background",
+
+                                            //Task END //////////////////////////////////
+                                            ]
+                                        },
+    
 });
