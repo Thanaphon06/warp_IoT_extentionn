@@ -256,10 +256,10 @@
 
                                             //Task START ////////////////////////////////
 
-                                            {
-                                                xml: '<label text="Task"></label>',
-                                            },
-                                                    "run_in_background",
+                         //                   {
+                        //                      xml: '<label text="Task"></label>',
+                        //                },
+                        //                      "run_in_background",
 
                                             //Task END //////////////////////////////////
                                             ]
