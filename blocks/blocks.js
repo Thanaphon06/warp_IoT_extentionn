@@ -968,23 +968,4 @@ Blockly.defineBlocksWithJsonArray([
     "tooltip": "",
     "helpUrl": ""
   },
-  {
-    "type": "controls_every",
-    "message0": "every %1 ms",
-    "args0": [{
-      "type": "input_value",
-      "name": "TIMES",
-      "check": "Number"
-    }],
-    "message1": "%1",
-    "args1": [{
-      "type": "input_statement",
-      "name": "DO"
-    }],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": "#D4AC0D",
-    "tooltip": "",
-    "helpUrl": ""
-  },
 ]);
