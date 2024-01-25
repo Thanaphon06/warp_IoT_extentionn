@@ -1,10 +1,10 @@
 ({
-    name: "NETPIE",
-    description: "Connect your device to NETPIE IoT platform",
-    author: "Chavee Issariyapat",
-    category: "Communication",
-    version: "1.0.4",
-    icon: "/static/icon.png",
+    name: "betlecar",
+    description: "",
+    author: "UP-SKILL",
+    category: "",
+    version: "1.0.0",
+    icon: "/static/beetlecar.png",
     color: "#4A7CCC",
     blocks: [
        {
