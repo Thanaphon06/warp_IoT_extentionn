@@ -31,8 +31,12 @@ Blockly.Msg.butup = "up";
 Blockly.Msg.butdown = "down";
 Blockly.Msg.butleft = "left";
 Blockly.Msg.butright = "right";
-Blockly.Msg.butokay = "ok";
+Blockly.Msg.butokay = "OK";
 
+Blockly.Msg.blacktext = "black";
+Blockly.Msg.whitetext = "white";
+Blockly.Msg.left = "left";
+Blockly.Msg.right = "right";
 
 
 Blockly.defineBlocksWithJsonArray([
@@ -250,7 +254,7 @@ Blockly.defineBlocksWithJsonArray([
 {
     
   "type":"switch",
-      "message0": "switch: %1 is put",
+      "message0": "switch: %1 on pressed",
       "args0":[
         {
           "type" : "field_dropdown",
@@ -340,7 +344,7 @@ Blockly.defineBlocksWithJsonArray([
 //LED Start //////////////////////////////////
 {        
             "type": "led_left",
-            "message0": "led: %1",
+            "message0": "LED: %1",
             "args0":[
             {
               "type": "field_dropdown",
@@ -363,7 +367,7 @@ Blockly.defineBlocksWithJsonArray([
 },
 {        
             "type": "led_right",
-            "message0": "led: %1",
+            "message0": "LED: %1",
             "args0":[
             {
               "type": "field_dropdown",
@@ -677,19 +681,19 @@ Blockly.defineBlocksWithJsonArray([
             Blockly.Msg.butstar , "*"
           ],
           [
-            Blockly.Msg.butup , "up"
+            Blockly.Msg.butup , "Up"
           ],
           [
-            Blockly.Msg.butdown , "down"
+            Blockly.Msg.butdown , "Down"
           ],
           [
-            Blockly.Msg.butleft , "left"
+            Blockly.Msg.butleft , "Left"
           ],
           [
-            Blockly.Msg.butright , "right"
+            Blockly.Msg.butright , "Right"
           ],
           [
-            Blockly.Msg.butokay , "ok"
+            Blockly.Msg.butokay , "OK"
           ],
           
         ]
@@ -776,7 +780,6 @@ Blockly.defineBlocksWithJsonArray([
     "helpUrl": ""
   },
   {
-     
     "type": "break_code",
     "message0": "break",
     "inputsInline": true,
@@ -786,186 +789,350 @@ Blockly.defineBlocksWithJsonArray([
     "tooltip": "",
     "helpUrl": ""
   },
-  {
-    "type": "on_start",
-    "message0": "on start",
-    "message1": "%1",
-    "args1": [{
-      "type": "input_statement",
-      "name": "DO"
-    }],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": "#D4AC0D",
-    "tooltip": "",
-    "helpUrl": "",
+  {        
+    "type": "line_sensor",
+    "message0": "line tracking sensor %1",
+    "args0":[
+    {
+      "type": "field_dropdown",
+      "name": "pin_sen",
+      "options": [
+        ["left" , "35"],
+        ["right" , "34"],
+        
+      ]
+        
+    }
+  ], 
+"output": null,
+"colour": "ad1457",
+"tooltip": "",
+"helpUrl": "",
+  
+},
+
+{        
+"type": "line_sensor_if",
+"message0": "line tracking %1 %2 %3",
+"args0":[
+{
+"type": "field_dropdown",
+"name": "pin_sen",
+"options": [
+  ["left" , "35"],
+  ["right" , "34"],
+  
+]
+  
 },
 {
-    "type": "switch_is_press_beetle",
-    "message0": "switch %1 is press ?",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "n",
-        "options": [
-          [
-            "S1",
-            "S1"
-          ],
-          [
-            "S2",
-            "S2"
-          ]
+"type": "field_dropdown",
+"name": "math",
+"options": [
+  [">" , ">"],
+  ["<" , "<"],
+  
+]
+
+},
+{
+"type": "field_dropdown",
+"name": "sensor_lr",
+"options": [
+  ["ssl" , "ssl"],
+  ["ssr" , "ssr"],
+  
+]
+
+},
+], 
+"output": null,
+"colour": "ad1457",
+"tooltip": "",
+"helpUrl": "",
+
+},
+
+{
+"type": "set_ssr_ssl",
+"message0": "set %1 %2",
+"args0": [
+{
+  "type": "field_dropdown",
+  "name": "ssr_ssl",
+  "options": [
+    ["ssr" , "ssr"],
+    ["ssl" , "ssl"],     
+  ]
+  
+},
+{
+  "type": "field_number",
+  "name": "pin",
+  
+}
+],
+"inputsInline": true,
+"previousStatement": null,
+"nextStatement": null,
+"colour": "ad1457",
+"tooltip": "",
+"helpUrl": ""
+},
+
+{        
+"type": "line_sensor_if3",
+"message0": "line tracking %1 is %2",
+"args0":[
+{
+  "type": "field_dropdown",
+  "name": "pin_sen",
+  "options": [
+    [Blockly.Msg.left , "35"],
+    [Blockly.Msg.right , "34"],
+    
+  ]
+    
+},
+{
+  "type": "field_dropdown",
+  "name": "math",
+  "options": [
+    [Blockly.Msg.blacktext , "1"],
+    [Blockly.Msg.whitetext , "2"],
+    
+  ]
+
+},
+
+], 
+"output": null,
+"colour": "ad1457",
+"tooltip": "",
+"helpUrl": "",
+
+},
+{
+  "type": "on_start",
+  "message0": "on start",
+  "message1": "%1",
+  "args1": [{
+    "type": "input_statement",
+    "name": "DO"
+  }],
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": "#D4AC0D",
+  "tooltip": "",
+  "helpUrl": "",
+},
+{
+  "type": "switch_is_press_beetle",
+  "message0": "switch %1 is press ?",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "n",
+      "options": [
+        [
+          "S1",
+          "S1"
+        ],
+        [
+          "S2",
+          "S2"
         ]
-      }
-    ],
-    "output": null,
-    "colour": "#00695c",
-    "tooltip": "",
-    "helpUrl": ""
-  },
-  {
-    "type": "switch_is_release_beetle",
-    "message0": "switch %1 is release ?",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "n",
-        "options": [
-          [
-            "S1",
-            "S1"
-          ],
-          [
-            "S2",
-            "S2"
-          ]
+      ]
+    }
+  ],
+  "output": null,
+  "colour": "#00695c",
+  "tooltip": "",
+  "helpUrl": ""
+},
+{
+  "type": "switch_is_release_beetle",
+  "message0": "switch %1 is release ?",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "n",
+      "options": [
+        [
+          "S1",
+          "S1"
+        ],
+        [
+          "S2",
+          "S2"
         ]
-      }
-    ],
-    "output": null,
-    "colour": "#00695c",
-    "tooltip": "",
-    "helpUrl": ""
-  },
-  {
-    "type": "switch_get_value_beetle",
-    "message0": "switch %1 get value",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "n",
-        "options": [
-          [
-            "S1",
-            "S1"
-          ],
-          [
-            "S2",
-            "S2"
-          ]
+      ]
+    }
+  ],
+  "output": null,
+  "colour": "#00695c",
+  "tooltip": "",
+  "helpUrl": ""
+},
+{
+  "type": "switch_get_value_beetle",
+  "message0": "switch %1 get value",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "n",
+      "options": [
+        [
+          "S1",
+          "S1"
+        ],
+        [
+          "S2",
+          "S2"
         ]
-      }
-    ],
-    "output": null,
-    "colour": "#00695c",
-    "tooltip": "",
-    "helpUrl": ""
-  },
-  {
-    "type": "switch_on_press_beetle",
-    "message0": "switch %1 on press %2 %3",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "pin",
-        "options": [
-          [
-            "sw_a",
-            "1"
-          ],
-          [
-            "sw_b",
-            "2"
-          ]
+      ]
+    }
+  ],
+  "output": null,
+  "colour": "#00695c",
+  "tooltip": "",
+  "helpUrl": ""
+},
+//------------------------------------------------------------------
+{
+  "type": "switch_on_press_beetle",
+  "message0": "switch %1 on pressed %2 %3",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "pin",
+      "options": [
+        [
+          "sw_a",
+          "1"
+        ],
+        [
+          "sw_b",
+          "2"
         ]
-      },
-      {
-        "type": "input_dummy"
-      },
-      {
-        "type": "input_statement",
-        "name": "callback"
-      }
-    ],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": "#00695c",
-    "tooltip": "",
-    "helpUrl": ""
-  },
-  {
-    "type": "switch_on_release_beetle",
-    "message0": "switch %1 on release %2 %3",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "pin",
-        "options": [
-          [
-            "S1",
-            "S1"
-          ],
-          [
-            "S2",
-            "S2"
-          ]
+      ]
+    },
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "input_statement",
+      "name": "callback"
+    }
+  ],
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": "#00695c",
+  "tooltip": "",
+  "helpUrl": ""
+},
+//------------------------------------------------------------------
+
+{
+  "type": "switch_on_release_beetle",
+  "message0": "switch %1 on release %2 %3",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "pin",
+      "options": [
+        [
+          "S1",
+          "S1"
+        ],
+        [
+          "S2",
+          "S2"
         ]
-      },
-      {
-        "type": "input_dummy"
-      },
-      {
-        "type": "input_statement",
-        "name": "callback"
-      }
-    ],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": "#00695c",
-    "tooltip": "",
-    "helpUrl": ""
-  },
-  {
-    "type": "switch_on_pressed_beetle",
-    "message0": "switch %1 on pressed %2 %3",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "pin",
-        "options": [
-          [
-            "sw_a",
-            "1"
-          ],
-          [
-            "sw_b",
-            "2"
-          ],
-        ]
-      },
-      {
-        "type": "input_dummy"
-      },
-      {
-        "type": "input_statement",
-        "name": "callback"
-      }
-    ],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": "#00695c",
-    "tooltip": "",
-    "helpUrl": ""
-  },
+      ]
+    },
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "input_statement",
+      "name": "callback"
+    }
+  ],
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": "#00695c",
+  "tooltip": "",
+  "helpUrl": ""
+},
+{
+  "type": "switch_on_pressed_beetle",
+  "message0": "switch %1 on pressed %2 %3",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "pin",
+      "options": [
+        [
+          "sw_a",
+          "1"
+        ],
+        [
+          "sw_b",
+          "2"
+        ],
+      ]
+    },
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "input_statement",
+      "name": "callback"
+    }
+  ],
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": "#00695c",
+  "tooltip": "",
+  "helpUrl": ""
+},
+{
+  "type": "controls_every",
+  "message0": "every %1 ms",
+  "args0": [{
+    "type": "input_value",
+    "name": "TIMES",
+    "check": "Number"
+  }],
+  "message1": "%1",
+  "args1": [{
+    "type": "input_statement",
+    "name": "DO"
+  }],
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": "#D4AC0D",
+  "tooltip": "",
+  "helpUrl": ""
+},
+
+{
+  "type": "abs_of",
+  "message0": "Absolute of %1",
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "FROM",
+      "check": "Number"
+    },
+    
+  ],
+  "inputsInline": true,
+  "output": "Number",
+  "style": "math_blocks",
+  "tooltip": "",
+  "helpUrl": ""
+},
+
 ]);
