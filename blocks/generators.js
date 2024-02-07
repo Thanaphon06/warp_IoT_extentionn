@@ -625,7 +625,20 @@ Blockly.Python['new_motor2'] = function(block) {
   Blockly.Python.definitions_['import_machine'] = 'import machine';
   Blockly.Python.definitions_['import_time'] = 'import time';
   
-
+  var stop = Blockly.Python.provideFunction_(
+    'stop',
+    [
+        'def stop():',
+        '    RMOTOR1.off()',
+        '    RMOTOR1_PWM.duty(int(0))',
+        '    LMOTOR1.off()',
+        '    LMOTOR1_PWM.duty(int(0))',
+        '    RMOTOR2.off()',
+        '    RMOTOR2_PWM.duty(int(0))',
+        '    LMOTOR2.off()',
+        '    LMOTOR2_PWM.duty(int(0))'
+    ]
+);
   var motorpin = Blockly.Python.provideFunction_(
     'motorpin',
     [
