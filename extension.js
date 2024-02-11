@@ -16,7 +16,7 @@
         //"switch_on_release_beetle",
         //"switch_is_press_beetle",
         //"switch_is_release_beetle",
-        //"switch_get_value_beetle",
+        "switch_get_value_beetle",
         
         
         
@@ -245,7 +245,7 @@
                                 `
                             },*/
 
-                            "line_sensor_if",
+                          //  "line_sensor_if",
                            
                             "line_sensor_if3",
                             {
@@ -256,6 +256,7 @@
                                     </block>
                                 `
                             },
+                            "read_ssl_ssr",
                             
                            
                             //Line Tracking END ////////////////////////

@@ -2,34 +2,51 @@
         // servo Start ////////////////////////////////
         Blockly.Python['servo'] = function(block) { 
           
-          Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-          var value_pin = block.getFieldValue('pin');
-          var value_angle = block.getFieldValue('angle');
-    
-          var code = ``; 
-          if (value_pin == '16') {
-            code = `beetlecar.servo_LiftUp(${value_angle})\n`
-          if(value_angle >= 90){
-            code = `beetlecar.servo_LiftUp(90)\n`
-            }
-          if(value_angle <= 0){
-            code = `beetlecar.servo_LiftUp(0)\n`
-          }
-        }
-          else if(value_pin == '17'){
-            code = `beetlecar.servo_Clamp(${value_angle})\n`
-          if(value_angle >= 90){
-            code = `beetlecar.servo_Clamp(90)\n`
-          }
-          if(value_angle <= 0){
-            code = `beetlecar.servo_Clamp(0)\n`
-          }
-        }
-    
-          return code;
-        };
-        // servo End //////////////////////////////////
+          Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin,PWM';
+          
+          var servopins1 = Blockly.Python.provideFunction_(
+            'servopins1',
+            [
+                'def servo_LiftUp(angle):',
+                '    PWM(Pin(16), freq=50).duty(int(0.5 * angle + 31))',
+                
+            ]
+        );
+        var servopins2 = Blockly.Python.provideFunction_(
+          'servopins2',
+          [
+              'def servo_Clamp(angle):',
+              '    PWM(Pin(17), freq=50).duty(int((4/9) * angle + 48))',
+              
+          ]
+      );
         
+            var value_pin = block.getFieldValue('pin');
+            var value_angle = block.getFieldValue('angle');
+      
+            var code = ``; 
+            if (value_pin == '16') {
+              code = `servo_LiftUp(${value_angle})\n`
+            if(value_angle >= 90){
+              code = `servo_LiftUp(90)\n`
+              }
+            if(value_angle <= 0){
+              code = `servo_LiftUp(0)\n`
+            }
+          }
+            else if(value_pin == '17'){
+              code = `servo_Clamp(${value_angle})\n`
+            if(value_angle >= 90){
+              code = `servo_Clamp(90)\n`
+            }
+            if(value_angle <= 0){
+              code = `servo_Clamp(0)\n`
+            }
+          }
+      
+            return code;
+          };
+          // servo End //////////////////////////////////
         
         
         // buzzer Start ///////////////////////////////
@@ -102,58 +119,58 @@
         };
         // LED End /////////////////////////////////////
         
-        // Ultrasonic Start ////////////////////////////
+ // Ultrasonic Start ////////////////////////////
 
-        Blockly.Python['ultra_read'] = function(block) {
+ Blockly.Python['ultra_read'] = function(block) {
           
-          Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-          Blockly.Python.definitions_['import_sleep_us'] = 'from machine import time_pulse_us';
-          Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin,PWM';
+  Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
+  Blockly.Python.definitions_['import_sleep_us'] = 'from machine import time_pulse_us';
+  Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
+  Blockly.Python.definitions_['from_time_import_sleep_us'] = 'from time import sleep_us';
 
-          var functionName = Blockly.Python.provideFunction_(
-            'distance()',
-            ['def ' + 'distance()' + ':',
-             '    sleep_us(10)',
-             '    return read(2, 15)'
-            ]
-          );
+  var functionName = Blockly.Python.provideFunction_(
+    'distance()',
+    ['def ' + 'distance()' + ':',
+     '    return read(2, 15)'
+    ]
+  );
 
-          var functionName = Blockly.Python.provideFunction_(
-            'read(trig_pin, echo_pin)',
-            ['def ' + 'read(trig_pin, echo_pin)' + ':',
-             '    trigger = Pin(trig_pin, mode=Pin.OUT)',
-             '    echo = Pin(echo_pin, mode=Pin.IN)',
-             '    trigger.value(0)',
-             '    sleep_us(5)',
-             '    trigger.value(1)',
-             '    sleep_us(10)',
-             '    trigger.value(0)',
-             '    try:',
-             '        pulse_time = time_pulse_us(echo, 1, 1000000)',
-             '        d = (pulse_time / 2) / 29.1',
-             '        return int(d) if d < 400 else -1',
-             '    except OSError as ex:',
-             '        return -1'
-            ]
-          );
-          
-          code = 'distance()';
-          return [code, Blockly.Python.ORDER_NONE];
-        },
-
-        
-        Blockly.Python['ultra_read_if'] = function(block) {
-          Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-        
-          var math_choice = block.getFieldValue('math');
-          var read_number = block.getFieldValue('read_num');
+  var functionName = Blockly.Python.provideFunction_(
+    'read(trig_pin, echo_pin)',
+    ['def ' + 'read(trig_pin, echo_pin)' + ':',
+     '    trigger = Pin(trig_pin, mode=Pin.OUT)',
+     '    echo = Pin(echo_pin, mode=Pin.IN)',
+     '    trigger.value(0)',
+     '    sleep_us(5)',
+     '    trigger.value(1)',
+     '    sleep_us(10)',
+     '    trigger.value(0)',
+     '    try:',
+     '        pulse_time = time_pulse_us(echo, 1, 1000000)',
+     '        d = (pulse_time / 2) / 29.1',
+     '        return int(d) if d < 400 else -1',
+     '    except OSError as ex:',
+     '        return -1'
+    ]
+  );
   
-         //var read_number = Block.Python.valueToCode(block, 'read_num', Blockly.Python.ORDER_ATOMIC);
-        
-          code = `beetlecar.distance() ${math_choice} ${read_number}`;
-          return [code, Blockly.Python.ORDER_NONE];
-        };
-        // Ultrasonic End ///////////////////////////////
+  code = 'distance()';
+  return [code, Blockly.Python.ORDER_NONE];
+},
+
+
+Blockly.Python['ultra_read_if'] = function(block) {
+  Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
+
+  var math_choice = block.getFieldValue('math');
+  var read_number = block.getFieldValue('read_num');
+
+ //var read_number = Block.Python.valueToCode(block, 'read_num', Blockly.Python.ORDER_ATOMIC);
+
+  code = `beetlecar.distance() ${math_choice} ${read_number}`;
+  return [code, Blockly.Python.ORDER_NONE];
+};
+// Ultrasonic End ///////////////////////////////
         
         // Neo_pixel Start //////////////////////////////
         
@@ -383,126 +400,7 @@
     };
       //IR_END ////////////////////////////////////
 
-      //LINE TRACKING Start ////////////////////////////////////
-      Blockly.Python['linetracking_threshold'] = function(block) {
-        Blockly.Python.definitions_['import_machine'] = 'import machine';
-        Blockly.Python.definitions_['import_time'] = 'import time';
-        
-        var black = block.getFieldValue('black');
-        var white = block.getFieldValue('white');
-        
-        Blockly.Python.definitions_['function_adcRead'] =
-          'def ' + Blockly.Python.variableDB_.getName('adcRead', Blockly.Python.NAME_TYPE) + '(analog_pin):\n' +
-          '    adc = machine.ADC(machine.Pin(analog_pin))\n' +
-          '    adc.atten(machine.ADC.ATTN_11DB)\n' +
-          '    adc.width(machine.ADC.WIDTH_12BIT)\n' +
-          '    return adc.read()\n';
-        
-          Blockly.Python.definitions_['line_tracking_variables'] =
-          'def ' + Blockly.Python.variableDB_.getName('lineTracking', Blockly.Python.NAME_TYPE) + '():\n' +
-          '    global sensor1_pin, sensor2_pin, sensor3_pin, black, white, threshold\n' +
-          '    sensor1_pin = 39\n' +
-          '    sensor2_pin = 34\n' +
-          '    sensor3_pin = 35\n' +
-          '    black = ' + black + '\n' +
-          '    white = ' + white + '\n' +
-          '    threshold = (black + white) / 2\n'
-        var code = 'lineTracking()\n'
-          code += 'sensor1_value = adcRead(sensor1_pin);\n';
-          code += 'sensor2_value = adcRead(sensor2_pin);\n';
-          code += 'sensor3_value = adcRead(sensor3_pin);\n';
-          //code += 'print("Threshold = ", "SEN1:", sensor1_value, " SEN2:", sensor2_value, " SEN3:", sensor3_value)\n';
-        return code;
-      }
 
-Blockly.Python['linetracking_sensor'] = function(block) {
-  var dropdown_sensor = block.getFieldValue('sensor');
-  var dropdown_operator = block.getFieldValue('operator');
-  var code = `${dropdown_sensor} ${dropdown_operator} threshold`;
-
-  return [code, Blockly.Python.ORDER_NONE];
-};
-// LINE TRACKING END ////////////////////////////////////
-
-// Moter 2.0 Start ////////////////////////////////////
-/*
-  Blockly.Python['motor_control'] = function(block) {
-    Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-  var dropdown_mcontrol = block.getFieldValue('mcontrol');
-  var dropdown_move = block.getFieldValue('move');
-  var dropdown_speed = block.getFieldValue('speed');
-  
-
-  var code = '';
-  if (dropdown_mcontrol == 'left' && dropdown_move == 'forward') {
-    code = `beetlecar.left_fw(${dropdown_speed})\n`;
-  } else if (dropdown_mcontrol == 'left' && dropdown_move == 'backward') {
-    code = `beetlecar.left_bw(${dropdown_speed})\n`;
-  } else if (dropdown_mcontrol == 'right' && dropdown_move == 'forward') {
-    code = `beetlecar.right_fw(${dropdown_speed})\n`;
-  } else if (dropdown_mcontrol == 'right' && dropdown_move == 'backward') {
-    code = `beetlecar.right_bw(${dropdown_speed})\n`;
-  }
-  return code;
-};
-Blockly.Python['motor_control0'] = function(block) {
-  Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-  var dropdown_motor_control0 = block.getFieldValue('motor_control0');
-  var dropdown_speed = block.getFieldValue('speed');
-
-
-  var code = '';
-  if (dropdown_motor_control0 == 'forward') {
-    code = `beetlecar.forward(${dropdown_speed})\n`;
-  } else if (dropdown_motor_control0 == 'backward') {
-    code = `beetlecar.backward(${dropdown_speed})\n`;
-  } else if (dropdown_motor_control0 == 'left') {
-    code = `beetlecar.motor_left(${dropdown_speed})\n`;
-  } else if (dropdown_motor_control0 == 'right') {
-    code = `beetlecar.motor_right(${dropdown_speed})\n`;
-  }
-  return code;
-};
-*/
-/*
-Blockly.Python['motor_control1'] = function(block) {
-Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-  var dropdown_motor_control1 = block.getFieldValue('motor_control1');
-  var dropdown_speed = block.getFieldValue('speed');
-  var time = block.getFieldValue('time');
- 
-
-  var code = '';
-  if (dropdown_motor_control1 == 'forward') {
-    code = `beetlecar.forward_duration(${dropdown_speed},${time})\n`;
-  } else if (dropdown_motor_control1 == 'backward') {
-    code = `beetlecar.backward_duration(${dropdown_speed},${time})\n`;
-  } else if (dropdown_motor_control1 == 'left') {
-    code = `beetlecar.left_duration(${dropdown_speed},${time})\n`;
-  } else if (dropdown_motor_control1 == 'right') {
-    code = `beetlecar.right_duration(${dropdown_speed},${time})\n`;
-  }
-  return code;
-};*/
-/*Blockly.Python['motor_control2'] = function(block) {
-    Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-  
-  var dropdown_motor_control2 = block.getFieldValue('motor_control2');
-  var speed = block.getFieldValue('speed');
-
-  var code = '';
-  if (dropdown_motor_control2 == 'forward') {
-   code = `beetlecar.forward(${speed})\n`;
-  } else if (dropdown_motor_control2 == 'backward') {
-   code = `beetlecar.backward(${speed})\n`;
-  } else if (dropdown_motor_control2 == 'left') {
-   code = `beetlecar.motor_left(${speed})\n`;
-  } else if (dropdown_motor_control2 == 'right') {
-   code = `beetlecar.motor_right(${speed})\n`;
-  }
-  return code;
-};
-*/
 Blockly.Python['new_motor'] = function(block) {
   
   Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
@@ -1169,7 +1067,6 @@ Blockly.Python['ir_read'] = function(block) {
   
       var dropdown_pin = block.getFieldValue('pin_sen');
       
-  
     
       var functionName = Blockly.Python.provideFunction_(
           'adcRead',
@@ -1188,24 +1085,20 @@ Blockly.Python['ir_read'] = function(block) {
   // ------------------------------------------------------------------------------------------------------
   Blockly.Python['set_ssr_ssl'] = function(block) {
     
-     
-      
-  
       var sensorlr = block.getFieldValue('ssr_ssl');
       var number_sensor = block.getFieldValue('pin');
       
-  
-    
       code = '';;
       if(sensorlr == "ssr"){
-        code = `ssr = ${number_sensor}`;
+        code = `ssr = ${number_sensor}\n`;
       }else if(sensorlr == "ssl"){
-        code = `ssl = ${number_sensor}`;
+        code = `ssl = ${number_sensor}\n`;
       }
       return code;
       
   };
   // ------------------------------------------------------------------------------------------------------
+  
   Blockly.Python['line_sensor_if'] = function(block) {
     
      
@@ -1220,6 +1113,8 @@ Blockly.Python['ir_read'] = function(block) {
   
       
   };
+  // ------------------------------------------------------------------------------------------------------
+  
   Blockly.Python['line_sensor_if3'] = function(block) {
             
       var sensorpin = block.getFieldValue('pin_sen');
@@ -1240,6 +1135,37 @@ Blockly.Python['ir_read'] = function(block) {
       
         return [code, Blockly.Python.ORDER_NONE];
   };
+  
+  // ------------------------------------------------------------------------------------------------------
+  Blockly.Python['read_ssl_ssr'] = function(block) {
+    Blockly.Python.definitions_['from_machine_import_pin_pwm_adc'] = 'from machine import Pin,PWM,ADC';
+  
+    
+    var functionName = Blockly.Python.provideFunction_(
+      'adcRead',
+      [
+          'def adcRead(analog_pin):',
+          '    adc = ADC(Pin(analog_pin))',
+          '    adc.atten(ADC.ATTN_11DB)',
+          '    adc.width(ADC.WIDTH_12BIT)',
+          '    return adc.read()',
+      ]
+  );
+      
+  
+    var sensorlrread = block.getFieldValue('ssr_ssl');
+   
+  
+    code = '';;
+    if(sensorlrread == "ssr"){
+      code = `print((adcRead(34))\n`;
+    }else if(sensorlrread == "ssl"){
+      code = `print((adcRead(35))\n`;
+    }
+    return code;
+    
+  };
+  // ------------------------------------------------------------------------------------------------------
   Blockly.Python['on_start'] = function(block) {
     // Disable automatic indentation
     Blockly.Python.INDENT = '';
