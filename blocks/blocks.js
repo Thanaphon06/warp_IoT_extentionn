@@ -32,11 +32,11 @@ Blockly.Msg.butdown = "down";
 Blockly.Msg.butleft = "left";
 Blockly.Msg.butright = "right";
 Blockly.Msg.butokay = "OK";
-
 Blockly.Msg.blacktext = "black";
 Blockly.Msg.whitetext = "white";
 Blockly.Msg.left = "left";
 Blockly.Msg.right = "right";
+
 
 
 Blockly.defineBlocksWithJsonArray([
@@ -763,6 +763,7 @@ Blockly.defineBlocksWithJsonArray([
     "helpUrl": ""
   },
   //MATH GROUP End ///////////////////////////////
+  //block_bool
   {
     "type": "bool_tf",
     "message0": "true",
@@ -779,7 +780,9 @@ Blockly.defineBlocksWithJsonArray([
     "tooltip": "",
     "helpUrl": ""
   },
+  //block_break
   {
+     
     "type": "break_code",
     "message0": "break",
     "inputsInline": true,
@@ -789,6 +792,7 @@ Blockly.defineBlocksWithJsonArray([
     "tooltip": "",
     "helpUrl": ""
   },
+  //block_linetracking
   {        
     "type": "line_sensor",
     "message0": "line tracking sensor %1",
@@ -912,6 +916,29 @@ Blockly.defineBlocksWithJsonArray([
 "helpUrl": "",
 
 },
+
+{
+"type": "read_ssl_ssr",
+"message0": "read %1",
+"args0": [
+{
+  "type": "field_dropdown",
+  "name": "ssr_ssl",
+  "options": [
+    ["ssr" , "ssr"],
+    ["ssl" , "ssl"],     
+  ]
+  
+},
+],
+"inputsInline": true,
+"previousStatement": null,
+"nextStatement": null,
+"colour": "ad1457",
+"tooltip": "",
+"helpUrl": ""
+},
+//block_onstart
 {
   "type": "on_start",
   "message0": "on start",
@@ -926,6 +953,7 @@ Blockly.defineBlocksWithJsonArray([
   "tooltip": "",
   "helpUrl": "",
 },
+//block_switch
 {
   "type": "switch_is_press_beetle",
   "message0": "switch %1 is press ?",
@@ -1097,7 +1125,8 @@ Blockly.defineBlocksWithJsonArray([
   "tooltip": "",
   "helpUrl": ""
 },
-{
+ //LOOP GROUP
+ {
   "type": "controls_every",
   "message0": "every %1 ms",
   "args0": [{
@@ -1116,7 +1145,7 @@ Blockly.defineBlocksWithJsonArray([
   "tooltip": "",
   "helpUrl": ""
 },
-
+//math_abs_of
 {
   "type": "abs_of",
   "message0": "Absolute of %1",
