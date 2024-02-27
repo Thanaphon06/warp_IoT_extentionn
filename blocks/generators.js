@@ -78,21 +78,42 @@
           Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin,PWM';
           Blockly.Python.definitions_['from_time_import_sleep'] = 'from time import sleep';
         
-            Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
+            //Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
         
               var select_song = block.getFieldValue('music');
-        
+  
+              var functionName = Blockly.Python.provideFunction_(
+                'scale',
+                ['scale5 = [523 , 554 , 587 ,622 , 659 , 698 ,739 , 783 , 830 , 880 , 932 , 987 , 1046 , 0]',
+                 'happy_birthday = [0 , 0 , 2 , 0 ,5 ,4 ,13, 0 ,0 , 2 ,0 ,7 ,5 ,13, 0 ,12 ,0 ,0 ,9 , 5 , 4 ,2, 13 , 9 , 9 , 9, 5 , 7 ,5]',
+                 'jingle_bell = [4,4,4,13,4,4,4,13,4,7,0,2,4,13,5,5,5,13,5,4,4,4,4,2,2,4,2,13,7]',
+                 'mary_little_lamb = [4,2,0,2,4,4,4,13,2,2,2,13,4,7,7,13,4,2,0,2,4,4,4,13,0,2,2,4,2,0]',
+                ]
+              );
+  
+              
+            var functionName = Blockly.Python.provideFunction_(
+              'buzzerWrite()',
+              ['def ' + 'buzzerWrite(pin, freq=1000, duty=50, stop=0)' + ':',
+               '    pwm = PWM(Pin(pin))',
+               '    pwm.freq(freq)',
+               '    pwm.duty(int(duty / 100 * 1023))',
+               '    if stop > 0:',
+               '      sleep(stop)',
+               '      pwm.duty(0)',
+              ]
+            );
               code = '';;
               if(select_song == 1){
-                code = `for i in beetlecar.happy_birthday:\n    beetlecar.buzzerWrite(23, freq=beetlecar.scale5[i], stop=0.3)\n    sleep(0.1)\n`;
+                code = `for i in happy_birthday:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
               }else if(select_song == 2){
-                code = `for i in beetlecar.darth_vader:\n    beetlecar.buzzerWrite(23, freq=beetlecar.scale5[i], stop=0.5)\n    sleep(0.1)\n`;
+                code = `for i in darth_vader:\n    buzzerWrite(23, freq=scale5[i], stop=0.5)\n    sleep(0.1)\n`;
               }else if(select_song == 3){
-                code = `for i in beetlecar.jingle_bell:\n    beetlecar.buzzerWrite(23, freq=beetlecar.scale5[i], stop=0.3)\n    sleep(0.1)\n`;
+                code = `for i in jingle_bell:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
               }else if(select_song == 4){
-                code = `for i in beetlecar.mary_little_lamb:\n    beetlecar.buzzerWrite(23, freq=beetlecar.scale5[i], stop=0.3)\n    sleep(0.1)\n`;
+                code = `for i in mary_little_lamb:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
               }else if(select_song == 5){
-                code = `for i in beetlecar.bitsy_spider:\n    beetlecar.buzzerWrite(23, freq=beetlecar.scale5[i], stop=0.3)\n    sleep(0.1)\n`;
+                code = `for i in bitsy_spider:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
               }
               return code;
             };
@@ -1237,19 +1258,33 @@
     // ------------------------------------------------------------------------------------------------------
     
     Blockly.Python['line_sensor_if3'] = function(block) {
-              
+      
+      Blockly.Python.definitions_['from_machine_import_pin_pwm_adc'] = 'from machine import Pin,PWM,ADC';
+    
+      
+      var functionName = Blockly.Python.provideFunction_(
+        'adcRead',
+        [
+            'def adcRead(analog_pin):',
+            '    adc = ADC(Pin(analog_pin))',
+            '    adc.atten(ADC.ATTN_11DB)',
+            '    adc.width(ADC.WIDTH_12BIT)',
+            '    return adc.read()',
+        ]
+    );
+        
         var sensorpin = block.getFieldValue('pin_sen');
         var bw = block.getFieldValue('math');
                     
         code = '';;
         if(sensorpin == 35 && bw == 1){
-            code = `adcRead(35) < ssl`;
-          }else if(sensorpin == 35 && bw == 2){
             code = `adcRead(35) > ssl`;
+          }else if(sensorpin == 35 && bw == 2){
+            code = `adcRead(35) < ssl`;
           }else if(sensorpin == 34 && bw == 1){
-            code = `adcRead(34) < ssr`;
-          }else if(sensorpin == 34 && bw == 2){
             code = `adcRead(34) > ssr`;
+          }else if(sensorpin == 34 && bw == 2){
+            code = `adcRead(34) < ssr`;
           }else{
             code = `404`;
           }
@@ -1392,10 +1427,10 @@ Blockly.Python['switch_on_press_beetle'] = function(block) {
 
     var code = '';;
     if(dropdown_pin == 1){
-        code = `a_put()\n`
+        code = `sw_a_put()\n`
     }
     else if(dropdown_pin == 2){
-        code = `b_put()\n`
+        code = `sw_b_put()\n`
     }
     else{
         code = `404`

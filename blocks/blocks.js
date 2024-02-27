@@ -32,11 +32,11 @@ Blockly.Msg.butdown = "down";
 Blockly.Msg.butleft = "left";
 Blockly.Msg.butright = "right";
 Blockly.Msg.butokay = "OK";
+
 Blockly.Msg.blacktext = "black";
 Blockly.Msg.whitetext = "white";
 Blockly.Msg.left = "left";
 Blockly.Msg.right = "right";
-
 
 
 Blockly.defineBlocksWithJsonArray([
@@ -513,10 +513,10 @@ Blockly.defineBlocksWithJsonArray([
                   "name": "music",
                   "options": [
                     [Blockly.Msg.happy , "1"],
-                    [Blockly.Msg.darth_vader , "2"],
+                    
                     [Blockly.Msg.jingle_bell , "3"],                
                     [Blockly.Msg.mary_little_lamb , "4"],
-                    [Blockly.Msg.bitsy_spider , "5"]
+                    
                   ]
                     
                 }
@@ -763,7 +763,7 @@ Blockly.defineBlocksWithJsonArray([
     "helpUrl": ""
   },
   //MATH GROUP End ///////////////////////////////
-  //block_bool
+  //bool_if
   {
     "type": "bool_tf",
     "message0": "true",
@@ -780,7 +780,7 @@ Blockly.defineBlocksWithJsonArray([
     "tooltip": "",
     "helpUrl": ""
   },
-  //block_break
+  //break  
   {
      
     "type": "break_code",
@@ -792,7 +792,7 @@ Blockly.defineBlocksWithJsonArray([
     "tooltip": "",
     "helpUrl": ""
   },
-  //block_linetracking
+  //linetrack  
   {        
     "type": "line_sensor",
     "message0": "line tracking sensor %1",
@@ -938,7 +938,7 @@ Blockly.defineBlocksWithJsonArray([
 "tooltip": "",
 "helpUrl": ""
 },
-//block_onstart
+//on_start  
 {
   "type": "on_start",
   "message0": "on start",
@@ -953,7 +953,7 @@ Blockly.defineBlocksWithJsonArray([
   "tooltip": "",
   "helpUrl": "",
 },
-//block_switch
+//switch
 {
   "type": "switch_is_press_beetle",
   "message0": "switch %1 is press ?",
@@ -1145,7 +1145,7 @@ Blockly.defineBlocksWithJsonArray([
   "tooltip": "",
   "helpUrl": ""
 },
-//math_abs_of
+//abs_of
 {
   "type": "abs_of",
   "message0": "Absolute of %1",
@@ -1163,5 +1163,4 @@ Blockly.defineBlocksWithJsonArray([
   "tooltip": "",
   "helpUrl": ""
 },
-
 ]);
