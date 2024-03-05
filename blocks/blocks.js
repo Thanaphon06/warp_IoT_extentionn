@@ -14,7 +14,11 @@ Blockly.Msg.darth_vader = "darth vader theme";
 Blockly.Msg.jingle_bell = "jingle bell";
 Blockly.Msg.mary_little_lamb = "mary had a little lamb";
 Blockly.Msg.bitsy_spider  = "bitsy spider ";
-
+//03/05/2024
+Blockly.Msg.badboy  = "badboy";
+Blockly.Msg.old_macdonald  = "old macdonald";
+Blockly.Msg.harry_potter  = "harry potter";
+//03/05/2024
 Blockly.Msg.but1 = "1";
 Blockly.Msg.but2 = "2";
 Blockly.Msg.but3 = "3";
@@ -453,6 +457,7 @@ Blockly.defineBlocksWithJsonArray([
       },
       //neopixel End ///////////////////////////////
 
+    //03/05/2024
     //Buzzer Start ///////////////////////////////
     {
         "type": "buzzer1",
@@ -513,9 +518,11 @@ Blockly.defineBlocksWithJsonArray([
                   "name": "music",
                   "options": [
                     [Blockly.Msg.happy , "1"],
-                    
                     [Blockly.Msg.jingle_bell , "3"],                
                     [Blockly.Msg.mary_little_lamb , "4"],
+                    [Blockly.Msg.badboy , "5"],
+                    [Blockly.Msg.old_macdonald , "6"],
+                    [Blockly.Msg.harry_potter , "7"],
                     
                   ]
                     
@@ -530,6 +537,7 @@ Blockly.defineBlocksWithJsonArray([
 
         },
     //Buzzer End /////////////////////////////////
+//03/05/2024
 
 
 
