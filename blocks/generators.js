@@ -1263,39 +1263,39 @@ var left_backward = Blockly.Python.provideFunction_(
     // ------------------------------------------------------------------------------------------------------
     
     Blockly.Python['line_sensor_if3'] = function(block) {
-      
-      Blockly.Python.definitions_['from_machine_import_pin_pwm_adc'] = 'from machine import Pin,PWM,ADC';
+  
+  Blockly.Python.definitions_['from_machine_import_pin_pwm_adc'] = 'from machine import Pin,PWM,ADC';
+
+  
+  var functionName = Blockly.Python.provideFunction_(
+    'adcRead',
+    [
+        'def adcRead(analog_pin):',
+        '    adc = ADC(Pin(analog_pin))',
+        '    adc.atten(ADC.ATTN_11DB)',
+        '    adc.width(ADC.WIDTH_12BIT)',
+        '    return adc.read()',
+    ]
+);
     
-      
-      var functionName = Blockly.Python.provideFunction_(
-        'adcRead',
-        [
-            'def adcRead(analog_pin):',
-            '    adc = ADC(Pin(analog_pin))',
-            '    adc.atten(ADC.ATTN_11DB)',
-            '    adc.width(ADC.WIDTH_12BIT)',
-            '    return adc.read()',
-        ]
-    );
-        
-        var sensorpin = block.getFieldValue('pin_sen');
-        var bw = block.getFieldValue('math');
-                    
-        code = '';;
-        if(sensorpin == 35 && bw == 1){
-            code = `adcRead(35) > ssl`;
-          }else if(sensorpin == 35 && bw == 2){
-            code = `adcRead(35) < ssl`;
-          }else if(sensorpin == 34 && bw == 1){
-            code = `adcRead(34) > ssr`;
-          }else if(sensorpin == 34 && bw == 2){
-            code = `adcRead(34) < ssr`;
-          }else{
-            code = `404`;
-          }
-        
-          return [code, Blockly.Python.ORDER_NONE];
-    };
+    var sensorpin = block.getFieldValue('pin_sen');
+    var bw = block.getFieldValue('math');
+                
+    code = '';;
+    if(sensorpin == 35 && bw == 1){
+        code = `adcRead(35) < ssl`;
+      }else if(sensorpin == 35 && bw == 2){
+        code = `adcRead(35) > ssl`;
+      }else if(sensorpin == 34 && bw == 1){
+        code = `adcRead(34) < ssr`;
+      }else if(sensorpin == 34 && bw == 2){
+        code = `adcRead(34) > ssr`;
+      }else{
+        code = `404`;
+      }
+    
+      return [code, Blockly.Python.ORDER_NONE];
+};
     
     // ------------------------------------------------------------------------------------------------------
     Blockly.Python['read_ssl_ssr'] = function(block) {
