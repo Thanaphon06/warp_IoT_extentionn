@@ -24,33 +24,33 @@
         
                                  //Motor 2.0 End ///////////////////////////////////
                                 {
-                                    xml: `
-                                    <block type="new_motor">
-                                        <field name="move">0</field>
-                                        <field name="speed">180</field>
-                                    </block>
-                                `
-                                },
-                                {
-                                    xml: `
-                                    <block type="new_motor2">
-                                        <field name="move">0</field>
-                                        <field name="speed">180</field>
-                                        <field name="time">0</field>
-                                    </block>
-                                `
-                                },
-                                {
-                                    xml: `
-                                    <block type="new_motor3">
-                                        <field name="motor">0</field>
-                                        <field name="move">0</field>
-                                        <field name="speed">200</field>
-                                    </block>
-                                ` 
-                                },
+                                                    xml: `
+                                                    <block type="new_motor">
+                                                        <field name="move">0</field>
+                                                        <field name="speed">50</field>
+                                                    </block>
+                                                `
+                                                },
+                                                {
+                                                    xml: `
+                                                    <block type="new_motor2">
+                                                        <field name="move">0</field>
+                                                        <field name="speed">50</field>
+                                                        <field name="time">2</field>
+                                                    </block>
+                                                `
+                                                },
+                                                {
+                                                    xml: `
+                                                    <block type="new_motor3">
+                                                        <field name="motor">0</field>
+                                                        <field name="move">0</field>
+                                                        <field name="speed">50</field>
+                                                    </block>
+                                                ` 
+                                                },
 
-                                "newstopMotor",
+                                                "newstopMotor",
 
                                 //Motor 2.0 End ///////////////////////////////////
 
