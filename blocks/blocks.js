@@ -47,8 +47,7 @@ Blockly.defineBlocksWithJsonArray([
 
   ////////MOTOR 2.0 Start ///////////
 
-
-  {
+ {
     "type": "new_motor",
     "message0": "move %1 pwm %2",
     "args0": [
@@ -79,7 +78,7 @@ Blockly.defineBlocksWithJsonArray([
         "name": "speed",
         "value": 0,
         "min": 0,
-        "max": 1023
+        "max": 100
       }
     ],
     "previousStatement": null,
@@ -120,7 +119,7 @@ Blockly.defineBlocksWithJsonArray([
         "name": "speed",
         "value": 0,
         "min": 0,
-        "max": 1023
+        "max": 100
       },
       {
         "type": "field_number",
@@ -186,7 +185,7 @@ Blockly.defineBlocksWithJsonArray([
         "name": "speed",
         "value": 204,
         "min": 0,
-        "max": 1023
+        "max": 100
       }
     ],
     "previousStatement": null,
@@ -207,7 +206,6 @@ Blockly.defineBlocksWithJsonArray([
     "tooltip": "",
     "helpUrl": ""
   },
-
  ////////MOTOR 2.0 end ///////////
 
 //Ultrasonic Start ///////////////////////////
