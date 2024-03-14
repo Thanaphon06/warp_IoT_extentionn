@@ -519,7 +519,7 @@ Blockly.defineBlocksWithJsonArray([
                     [Blockly.Msg.jingle_bell , "3"],                
                     [Blockly.Msg.mary_little_lamb , "4"],
                     [Blockly.Msg.badboy , "5"],
-                    [Blockly.Msg.old_macdonald , "6"],
+                    
                     [Blockly.Msg.harry_potter , "7"],
                     
                   ]
