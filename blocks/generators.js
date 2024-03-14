@@ -73,6 +73,7 @@
       return code;
       };
         
+             
       Blockly.Python['buz_play_music'] = function(block) {
         Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin,PWM';
         Blockly.Python.definitions_['from_time_import_sleep'] = 'from time import sleep';
@@ -83,13 +84,12 @@
 
             var functionName = Blockly.Python.provideFunction_(
               'scale',
-              ['scale5 = [523 , 554 , 587 ,622 , 659 , 698 ,739 , 783 , 830 , 880 , 932 , 987 , 1046 , 0 ,493]',
-               'happy_birthday = [0 , 0 , 2 , 0 ,5 ,4 ,13, 0 ,0 , 2 ,0 ,7 ,5 ,13, 0 ,12 ,0 ,0 ,9 , 5 , 4 ,2, 13 , 9 , 9 , 9, 5 , 7 ,5]',
-               'jingle_bell = [4,4,4,13,4,4,4,13,4,7,0,2,4,13,5,5,5,13,5,4,4,4,4,2,2,4,2,13,7]',
-               'mary_little_lamb = [4,2,0,2,4,4,4,13,2,2,2,13,4,7,7,13,4,2,0,2,4,4,4,13,0,2,2,4,2,0]',
-               'badboy = [3,5,7,13,7,3,3,13,3,5,7,5,5,7,3,13,3,5,7,13,7,3,3,13,3,5,7,5,5,7,3,13]',
-               'old_macdonald = [0,0,0,7,9,9,7,13,4,4,2,2,0]',
-               'harry_potter =[14,4,7,6,4,13,11,9,13,6,13,4,7,6,2,13,5,14]',
+              ['scale5 = [261,277,293,311,329,349,369,392,415,440,466,493,0 ,523 , 554 , 587 ,622 , 659 , 698 ,739 , 783 , 830 , 880 , 932 , 987 , 1046 ]',
+               'happy_birthday = [0 , 0 , 2 , 0 ,5 ,4 ,12, 0 ,0 , 2 ,0 ,7 ,5 ,12,0 ,0 ,13 , 9 , 5,4 ,2, 12 , 9 , 9 , 9, 5 , 7 ,5]',
+               'jingle_bell = [4,4,4,12,4,4,4,12,4,7,0,2,4,12,5,5,5,12,5,4,4,4,4,2,2,4,2,12,7]',
+               'mary_little_lamb = [4,2,0,2,4,4,4,12,2,2,2,12,4,7,7,12,4,2,0,2,4,4,4,12,0,2,2,4,2,0]',
+               'badboy = [3,5,7,12,7,3,3,12,3,5,7,5,5,7,3,12,3,5,7,12,7,3,3,12,3,5,7,5,5,7,3,12]',
+               'harry_potter =[11,17,20,19,17,12,24,22,12,19,12,17,20,19,15,12,18,11]',
               ]
             );
 
@@ -114,10 +114,7 @@
               code = `for i in mary_little_lamb:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
             }else if(select_song == 5){
               code = `for i in badboy:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
-            }else if(select_song == 6){
-              code = `for i in old_macdonald:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
-            }
-            else if(select_song == 7){
+            }else if(select_song == 7){
               code = `for i in harry_potter:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
             }
             return code;
