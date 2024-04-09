@@ -48,80 +48,80 @@
           };
           // servo End //////////////////////////////////
           
-                //03/05/2024
-        // buzzer Start ///////////////////////////////
-        Blockly.Python['buzzer1'] = function(block) {
-        Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-  
-      var value_freq = Blockly.Python.valueToCode(block, 'freq', Blockly.Python.ORDER_ATOMIC);
-      var value_time = Blockly.Python.valueToCode(block, 'time', Blockly.Python.ORDER_ATOMIC);
-      
-      var code = `beetlecar.buzzerWrite(23, freq=${value_freq}, stop=${value_time})\n`;
-      return code;
-      };
-      Blockly.Python['buzzer2'] = function(block) {
-        Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';  
-     
-      var value_freq = Blockly.Python.valueToCode(block, 'freq', Blockly.Python.ORDER_ATOMIC);
-      var code = `beetlecar.buzzerWrite(23, freq=${value_freq})\n`;
-      return code;
-      };
-      Blockly.Python['buzzer3'] = function(block) {
-        Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-
-      var code = `beetlecar.buzzerWrite(23, duty=0)\n`;
-      return code;
-      };
+          
+          //03/05/2024
+          // buzzer Start ///////////////////////////////
+          Blockly.Python['buzzer1'] = function(block) {
+          Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
+    
+        var value_freq = Blockly.Python.valueToCode(block, 'freq', Blockly.Python.ORDER_ATOMIC);
+        var value_time = Blockly.Python.valueToCode(block, 'time', Blockly.Python.ORDER_ATOMIC);
         
-             
-      Blockly.Python['buz_play_music'] = function(block) {
-        Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin,PWM';
-        Blockly.Python.definitions_['from_time_import_sleep'] = 'from time import sleep';
-      
-          //Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-      
-            var select_song = block.getFieldValue('music');
-
+        var code = `beetlecar.buzzerWrite(23, freq=${value_freq}, stop=${value_time})\n`;
+        return code;
+        };
+        Blockly.Python['buzzer2'] = function(block) {
+          Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';  
+       
+        var value_freq = Blockly.Python.valueToCode(block, 'freq', Blockly.Python.ORDER_ATOMIC);
+        var code = `beetlecar.buzzerWrite(23, freq=${value_freq})\n`;
+        return code;
+        };
+        Blockly.Python['buzzer3'] = function(block) {
+          Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
+  
+        var code = `beetlecar.buzzerWrite(23, duty=0)\n`;
+        return code;
+        };
+          
+        Blockly.Python['buz_play_music'] = function(block) {
+          Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin,PWM';
+          Blockly.Python.definitions_['from_time_import_sleep'] = 'from time import sleep';
+        
+            //Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
+        
+              var select_song = block.getFieldValue('music');
+  
+              var functionName = Blockly.Python.provideFunction_(
+                'scale',
+                ['scale5 = [261,277,293,311,329,349,369,392,415,440,466,493,0 ,523 , 554 , 587 ,622 , 659 , 698 ,739 , 783 , 830 , 880 , 932 , 987 , 1046 ]',
+                 'happy_birthday = [0 , 0 , 2 , 0 ,5 ,4 ,12, 0 ,0 , 2 ,0 ,7 ,5 ,12,0 ,0 ,13 , 9 , 5,4 ,2, 12 , 9 , 9 , 9, 5 , 7 ,5]',
+                 'jingle_bell = [4,4,4,12,4,4,4,12,4,7,0,2,4,12,5,5,5,12,5,4,4,4,4,2,2,4,2,12,7]',
+                 'mary_little_lamb = [4,2,0,2,4,4,4,12,2,2,2,12,4,7,7,12,4,2,0,2,4,4,4,12,0,2,2,4,2,0]',
+                 'badboy = [3,5,7,12,7,3,3,12,3,5,7,5,5,7,3,12,3,5,7,12,7,3,3,12,3,5,7,5,5,7,3,12]',
+                 'harry_potter =[11,17,20,19,17,12,24,22,12,19,12,17,20,19,15,12,18,11]',
+                ]
+              );
+  
+              
             var functionName = Blockly.Python.provideFunction_(
-              'scale',
-              ['scale5 = [261,277,293,311,329,349,369,392,415,440,466,493,0 ,523 , 554 , 587 ,622 , 659 , 698 ,739 , 783 , 830 , 880 , 932 , 987 , 1046 ]',
-               'happy_birthday = [0 , 0 , 2 , 0 ,5 ,4 ,12, 0 ,0 , 2 ,0 ,7 ,5 ,12,0 ,0 ,13 , 9 , 5,4 ,2, 12 , 9 , 9 , 9, 5 , 7 ,5]',
-               'jingle_bell = [4,4,4,12,4,4,4,12,4,7,0,2,4,12,5,5,5,12,5,4,4,4,4,2,2,4,2,12,7]',
-               'mary_little_lamb = [4,2,0,2,4,4,4,12,2,2,2,12,4,7,7,12,4,2,0,2,4,4,4,12,0,2,2,4,2,0]',
-               'badboy = [3,5,7,12,7,3,3,12,3,5,7,5,5,7,3,12,3,5,7,12,7,3,3,12,3,5,7,5,5,7,3,12]',
-               'harry_potter =[11,17,20,19,17,12,24,22,12,19,12,17,20,19,15,12,18,11]',
+              'buzzerWrite()',
+              ['def ' + 'buzzerWrite(pin, freq=1000, duty=50, stop=0)' + ':',
+               '    pwm = PWM(Pin(pin))',
+               '    pwm.freq(freq)',
+               '    pwm.duty(int(duty / 100 * 1023))',
+               '    if stop > 0:',
+               '      sleep(stop)',
+               '      pwm.duty(0)',
               ]
             );
-
-            
-          var functionName = Blockly.Python.provideFunction_(
-            'buzzerWrite()',
-            ['def ' + 'buzzerWrite(pin, freq=1000, duty=50, stop=0)' + ':',
-             '    pwm = PWM(Pin(pin))',
-             '    pwm.freq(freq)',
-             '    pwm.duty(int(duty / 100 * 1023))',
-             '    if stop > 0:',
-             '      sleep(stop)',
-             '      pwm.duty(0)',
-            ]
-          );
-            code = '';;
-            if(select_song == 1){
-              code = `for i in happy_birthday:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
-            }else if(select_song == 3){
-              code = `for i in jingle_bell:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
-            }else if(select_song == 4){
-              code = `for i in mary_little_lamb:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
-            }else if(select_song == 5){
-              code = `for i in badboy:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
-            }else if(select_song == 7){
-              code = `for i in harry_potter:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
-            }
-            return code;
-          };
-  
-        // buzzer End /////////////////////////////////
-        //03/05/2024
+              code = '';;
+              if(select_song == 1){
+                code = `for i in happy_birthday:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
+              }else if(select_song == 3){
+                code = `for i in jingle_bell:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
+              }else if(select_song == 4){
+                code = `for i in mary_little_lamb:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
+              }else if(select_song == 5){
+                code = `for i in badboy:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
+              }else if(select_song == 7){
+                code = `for i in harry_potter:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
+              }
+              return code;
+            };
+    
+          // buzzer End /////////////////////////////////
+          //03/05/2024
           // LED Start //////////////////////////////////
   
           Blockly.Python['led_onoff'] = function(block) {
@@ -423,48 +423,6 @@
         return [code, Blockly.Python.ORDER_NONE];
       };
         //IR_END ////////////////////////////////////
-  
-        //LINE TRACKING Start ////////////////////////////////////
-        Blockly.Python['linetracking_threshold'] = function(block) {
-          Blockly.Python.definitions_['import_machine'] = 'import machine';
-          Blockly.Python.definitions_['import_time'] = 'import time';
-          
-          var black = block.getFieldValue('black');
-          var white = block.getFieldValue('white');
-          
-          Blockly.Python.definitions_['function_adcRead'] =
-            'def ' + Blockly.Python.variableDB_.getName('adcRead', Blockly.Python.NAME_TYPE) + '(analog_pin):\n' +
-            '    adc = machine.ADC(machine.Pin(analog_pin))\n' +
-            '    adc.atten(machine.ADC.ATTN_11DB)\n' +
-            '    adc.width(machine.ADC.WIDTH_12BIT)\n' +
-            '    return adc.read()\n';
-          
-            Blockly.Python.definitions_['line_tracking_variables'] =
-            'def ' + Blockly.Python.variableDB_.getName('lineTracking', Blockly.Python.NAME_TYPE) + '():\n' +
-            '    global sensor1_pin, sensor2_pin, sensor3_pin, black, white, threshold\n' +
-            '    sensor1_pin = 39\n' +
-            '    sensor2_pin = 34\n' +
-            '    sensor3_pin = 35\n' +
-            '    black = ' + black + '\n' +
-            '    white = ' + white + '\n' +
-            '    threshold = (black + white) / 2\n'
-          var code = 'lineTracking()\n'
-            code += 'sensor1_value = adcRead(sensor1_pin);\n';
-            code += 'sensor2_value = adcRead(sensor2_pin);\n';
-            code += 'sensor3_value = adcRead(sensor3_pin);\n';
-            //code += 'print("Threshold = ", "SEN1:", sensor1_value, " SEN2:", sensor2_value, " SEN3:", sensor3_value)\n';
-          return code;
-        }
-  
-  Blockly.Python['linetracking_sensor'] = function(block) {
-    var dropdown_sensor = block.getFieldValue('sensor');
-    var dropdown_operator = block.getFieldValue('operator');
-    var code = `${dropdown_sensor} ${dropdown_operator} threshold`;
-  
-    return [code, Blockly.Python.ORDER_NONE];
-  };
-  // LINE TRACKING END ////////////////////////////////////
-  
   // Moter 2.0 Start ////////////////////////////////////
   /*
     Blockly.Python['motor_control'] = function(block) {
@@ -544,28 +502,262 @@
     return code;
   };
   */
- Blockly.Python['new_motor'] = function(block) {
-  
-  Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
-  Blockly.Python.definitions_['import_machine'] = 'import machine';
-  Blockly.Python.definitions_['import_time'] = 'import time';
-  
-
+  Blockly.Python['new_motor'] = function(block) {
     
-  var motorpin = Blockly.Python.provideFunction_(
-    'motorpin',
+    Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
+    Blockly.Python.definitions_['import_machine'] = 'import machine';
+    Blockly.Python.definitions_['import_time'] = 'import time';
+    
+  
+      
+    var motorpin = Blockly.Python.provideFunction_(
+      'motorpin',
+      [
+          'RMOTOR1 = Pin(26, Pin.OUT)',
+          'LMOTOR1 = Pin(14, Pin.OUT)',
+          'RMOTOR2 = Pin(25, Pin.OUT)',
+          'LMOTOR2 = Pin(27, Pin.OUT)',
+          'RMOTOR1_PWM = PWM(Pin(26), freq=1000)',
+          'LMOTOR1_PWM = PWM(Pin(14), freq=1000)',
+          'RMOTOR2_PWM = PWM(Pin(25), freq=1000)',
+          'LMOTOR2_PWM = PWM(Pin(27), freq=1000)',
+      ]
+  );
+    var stop = Blockly.Python.provideFunction_(
+        'stop',
+        [
+            'def stop():',
+            '    RMOTOR1.off()',
+            '    RMOTOR1_PWM.duty(int(0))',
+            '    LMOTOR1.off()',
+            '    LMOTOR1_PWM.duty(int(0))',
+            '    RMOTOR2.off()',
+            '    RMOTOR2_PWM.duty(int(0))',
+            '    LMOTOR2.off()',
+            '    LMOTOR2_PWM.duty(int(0))'
+        ]
+    );
+    
+    var backward = Blockly.Python.provideFunction_(
+        'backward',
+        [
+            'def backward(speed):',
+            '    RMOTOR1.off()',
+            '    RMOTOR1_PWM.duty(int(0))',
+            '    LMOTOR1.off()',
+            '    LMOTOR1_PWM.duty(int(0))',
+            '    RMOTOR2.on()',
+            '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
+            '    LMOTOR2.on()',
+            '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))'
+        ]
+    );
+    
+    var forward = Blockly.Python.provideFunction_(
+        'forward',
+        [
+            'def forward(speed):',
+            '    RMOTOR1.on()',
+            '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
+            '    LMOTOR1.on()',
+            '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
+            '    RMOTOR2.off()',
+            '    RMOTOR2_PWM.duty(int(0))',
+            '    LMOTOR2.off()',
+            '    LMOTOR2_PWM.duty(int(0))'
+        ]
+    );
+    
+    var left = Blockly.Python.provideFunction_(
+        'left',
+        [
+            'def left(speed):',
+            '    RMOTOR1.on()',
+            '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
+            '    LMOTOR1.off()',
+            '    LMOTOR1_PWM.duty(int(0))',
+            '    RMOTOR2.off()',
+            '    RMOTOR2_PWM.duty(int(0))',
+            '    LMOTOR2.on()',
+            '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))'
+        ]
+    );
+    
+    var right = Blockly.Python.provideFunction_(
+        'right',
+        [
+            'def right(speed):',
+            '    RMOTOR1.off()',
+            '    RMOTOR1_PWM.duty(int(0))',
+            '    LMOTOR1.on()',
+            '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
+            '    RMOTOR2.on()',
+            '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
+            '    LMOTOR2.off()',
+            '    LMOTOR2_PWM.duty(int(0))'
+        ]
+    );
+    
+  
+    
+    
+    var move = block.getFieldValue('move');
+    var speed = block.getFieldValue('speed');
+  
+    var code = '';
+    if(speed == 0){
+      code = `stop()\n`;
+    }else{
+      if (move == 'forward') {
+        code = 'forward' + '(' + speed + ')\n';
+      }else if (move == 'backward') {
+        code = 'backward' + '(' + speed + ')\n';
+      }else if (move == 'left') {
+        code = 'left' + '(' + speed + ')\n';
+      }else if (move == 'right') {
+        code = 'right' + '(' + speed + ')\n';
+      }
+    } 
+    return code;
+  };
+  Blockly.Python['new_motor2'] = function(block) {
+    Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
+    Blockly.Python.definitions_['import_machine'] = 'import machine';
+    Blockly.Python.definitions_['import_time'] = 'import time';
+    
+  
+    var motorpin = Blockly.Python.provideFunction_(
+      'motorpin',
+      [
+          'RMOTOR1 = Pin(26, Pin.OUT)',
+          'LMOTOR1 = Pin(14, Pin.OUT)',
+          'RMOTOR2 = Pin(25, Pin.OUT)',
+          'LMOTOR2 = Pin(27, Pin.OUT)',
+          'RMOTOR1_PWM = PWM(Pin(26), freq=1000)',
+          'LMOTOR1_PWM = PWM(Pin(14), freq=1000)',
+          'RMOTOR2_PWM = PWM(Pin(25), freq=1000)',
+          'LMOTOR2_PWM = PWM(Pin(27), freq=1000)',
+      ]
+  );
+  var forward_for_sec = Blockly.Python.provideFunction_(
+    'forward_for_sec',
     [
-        'RMOTOR1 = Pin(26, Pin.OUT)',
-        'LMOTOR1 = Pin(14, Pin.OUT)',
-        'RMOTOR2 = Pin(25, Pin.OUT)',
-        'LMOTOR2 = Pin(27, Pin.OUT)',
-        'RMOTOR1_PWM = PWM(Pin(26), freq=1000)',
-        'LMOTOR1_PWM = PWM(Pin(14), freq=1000)',
-        'RMOTOR2_PWM = PWM(Pin(25), freq=1000)',
-        'LMOTOR2_PWM = PWM(Pin(27), freq=1000)',
+        'def forward_for_sec(speed, duration):',
+        '    RMOTOR1.on()',
+        '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
+        '    LMOTOR1.on()',
+        '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
+        '    RMOTOR2.off()',
+        '    RMOTOR2_PWM.duty(int(0))',
+        '    LMOTOR2.off()',
+        '    LMOTOR2_PWM.duty(int(0))',
+        '    time.sleep(duration)',
+        '    stop()'
     ]
-);
+  );
+  
+  var backward_for_sec = Blockly.Python.provideFunction_(
+    'backward_for_sec',
+    [
+        'def backward_for_sec(speed, duration):',
+        '    RMOTOR1.off()',
+        '    RMOTOR1_PWM.duty(int(0))',
+        '    LMOTOR1.off()',
+        '    LMOTOR1_PWM.duty(int(0))',
+        '    RMOTOR2.on()',
+        '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
+        '    LMOTOR2.on()',
+        '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
+        '    time.sleep(duration)',
+        '    stop()'
+    ]
+  );
+  
+  var left_for_sec = Blockly.Python.provideFunction_(
+    'left_for_sec',
+    [
+        'def left_for_sec(speed, duration):',
+        '    RMOTOR1.on()',
+        '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
+        '    LMOTOR1.off()',
+        '    LMOTOR1_PWM.duty(int(0))',
+        '    RMOTOR2.off()',
+        '    RMOTOR2_PWM.duty(int(0))',
+        '    LMOTOR2.on()',
+        '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
+        '    time.sleep(duration)',
+        '    stop()'
+    ]
+  );
+  
+  var right_for_sec = Blockly.Python.provideFunction_(
+    'right_for_sec',
+    [
+        'def right_for_sec(speed, duration):',
+        '    RMOTOR1.off()',
+        '    RMOTOR1_PWM.duty(int(0))',
+        '    LMOTOR1.on()',
+        '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
+        '    RMOTOR2.on()',
+        '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
+        '    LMOTOR2.off()',
+        '    LMOTOR2_PWM.duty(int(0))',
+        '    time.sleep(duration)',
+        '    stop()'
+    ]
+  );
   var stop = Blockly.Python.provideFunction_(
+    'stop',
+    [
+        'def stop():',
+        '    RMOTOR1.off()',
+        '    RMOTOR1_PWM.duty(int(0))',
+        '    LMOTOR1.off()',
+        '    LMOTOR1_PWM.duty(int(0))',
+        '    RMOTOR2.off()',
+        '    RMOTOR2_PWM.duty(int(0))',
+        '    LMOTOR2.off()',
+        '    LMOTOR2_PWM.duty(int(0))'
+    ]
+  );
+  
+    var move = block.getFieldValue('move');
+    var speed = block.getFieldValue('speed');
+    var time = block.getFieldValue('time');
+  
+   
+    var code = '';
+    if(speed == 0){
+      code = `stop()\n`;
+    }else{
+    if (move == 'forward') {
+      
+        
+      code = 'forward_for_sec' + '(' + speed + ', '+ time +')\n';
+    } else if (move == 'backward') {
+      
+        
+      code = 'backward_for_sec' + '(' + speed + ', '+ time +')\n';
+    } else if (move == 'left') {
+      
+        
+      code = 'left_for_sec' + '(' + speed + ', '+ time +')\n';
+    } else if (move == 'right') {
+      
+        
+      code = 'right_for_sec' + '(' + speed + ', '+ time +')\n';
+    } else if(speed == 0){
+      code = `stop\n`
+    } 
+    }
+    return code;
+  };
+  Blockly.Python['newstopMotor'] = function(block) {
+    Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
+    Blockly.Python.definitions_['import_machine'] = 'import machine';
+    Blockly.Python.definitions_['import_time'] = 'import time';
+  
+    var stop = Blockly.Python.provideFunction_(
       'stop',
       [
           'def stop():',
@@ -580,238 +772,11 @@
       ]
   );
   
-  var backward = Blockly.Python.provideFunction_(
-      'backward',
-      [
-          'def backward(speed):',
-          '    RMOTOR1.off()',
-          '    RMOTOR1_PWM.duty(int(0))',
-          '    LMOTOR1.off()',
-          '    LMOTOR1_PWM.duty(int(0))',
-          '    RMOTOR2.on()',
-          '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-          '    LMOTOR2.on()',
-          '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))'
-      ]
-  );
-  
-  var forward = Blockly.Python.provideFunction_(
-      'forward',
-      [
-          'def forward(speed):',
-          '    RMOTOR1.on()',
-          '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-          '    LMOTOR1.on()',
-          '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-          '    RMOTOR2.off()',
-          '    RMOTOR2_PWM.duty(int(0))',
-          '    LMOTOR2.off()',
-          '    LMOTOR2_PWM.duty(int(0))'
-      ]
-  );
-  
-  var left = Blockly.Python.provideFunction_(
-      'left',
-      [
-          'def left(speed):',
-          '    RMOTOR1.on()',
-          '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-          '    LMOTOR1.off()',
-          '    LMOTOR1_PWM.duty(int(0))',
-          '    RMOTOR2.off()',
-          '    RMOTOR2_PWM.duty(int(0))',
-          '    LMOTOR2.on()',
-          '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))'
-      ]
-  );
-  
-  var right = Blockly.Python.provideFunction_(
-      'right',
-      [
-          'def right(speed):',
-          '    RMOTOR1.off()',
-          '    RMOTOR1_PWM.duty(int(0))',
-          '    LMOTOR1.on()',
-          '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-          '    RMOTOR2.on()',
-          '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-          '    LMOTOR2.off()',
-          '    LMOTOR2_PWM.duty(int(0))'
-      ]
-  );
-  
-
-  
-  
-  var move = block.getFieldValue('move');
-  var speed = block.getFieldValue('speed');
-
-  var code = '';
-  if (move == 'forward') {
-    code = 'forward' + '(' + speed + ')\n';
-  } else if (move == 'backward') {
+    var code = 'stop()\n';
     
-    code = 'backward' + '(' + speed + ')\n';
-  } else if (move == 'left') {
+    return code;
     
-    code = 'left' + '(' + speed + ')\n';
-  } else if (move == 'right') {
-    
-    code = 'right' + '(' + speed + ')\n';
-  }
-  return code;
-};
-Blockly.Python['new_motor2'] = function(block) {
-  Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
-  Blockly.Python.definitions_['import_machine'] = 'import machine';
-  Blockly.Python.definitions_['import_time'] = 'import time';
-  
-
-  var motorpin = Blockly.Python.provideFunction_(
-    'motorpin',
-    [
-        'RMOTOR1 = Pin(26, Pin.OUT)',
-        'LMOTOR1 = Pin(14, Pin.OUT)',
-        'RMOTOR2 = Pin(25, Pin.OUT)',
-        'LMOTOR2 = Pin(27, Pin.OUT)',
-        'RMOTOR1_PWM = PWM(Pin(26), freq=1000)',
-        'LMOTOR1_PWM = PWM(Pin(14), freq=1000)',
-        'RMOTOR2_PWM = PWM(Pin(25), freq=1000)',
-        'LMOTOR2_PWM = PWM(Pin(27), freq=1000)',
-    ]
-);
-var forward_for_sec = Blockly.Python.provideFunction_(
-  'forward_for_sec',
-  [
-      'def forward_for_sec(speed, duration):',
-      '    RMOTOR1.on()',
-      '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-      '    LMOTOR1.on()',
-      '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-      '    RMOTOR2.off()',
-      '    RMOTOR2_PWM.duty(int(0))',
-      '    LMOTOR2.off()',
-      '    LMOTOR2_PWM.duty(int(0))',
-      '    time.sleep(duration)',
-      '    stop()'
-  ]
-);
-
-var backward_for_sec = Blockly.Python.provideFunction_(
-  'backward_for_sec',
-  [
-      'def backward_for_sec(speed, duration):',
-      '    RMOTOR1.off()',
-      '    RMOTOR1_PWM.duty(int(0))',
-      '    LMOTOR1.off()',
-      '    LMOTOR1_PWM.duty(int(0))',
-      '    RMOTOR2.on()',
-      '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-      '    LMOTOR2.on()',
-      '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-      '    time.sleep(duration)',
-      '    stop()'
-  ]
-);
-
-var left_for_sec = Blockly.Python.provideFunction_(
-  'left_for_sec',
-  [
-      'def left_for_sec(speed, duration):',
-      '    RMOTOR1.on()',
-      '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-      '    LMOTOR1.off()',
-      '    LMOTOR1_PWM.duty(int(0))',
-      '    RMOTOR2.off()',
-      '    RMOTOR2_PWM.duty(int(0))',
-      '    LMOTOR2.on()',
-      '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-      '    time.sleep(duration)',
-      '    stop()'
-  ]
-);
-
-var right_for_sec = Blockly.Python.provideFunction_(
-  'right_for_sec',
-  [
-      'def right_for_sec(speed, duration):',
-      '    RMOTOR1.off()',
-      '    RMOTOR1_PWM.duty(int(0))',
-      '    LMOTOR1.on()',
-      '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-      '    RMOTOR2.on()',
-      '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-      '    LMOTOR2.off()',
-      '    LMOTOR2_PWM.duty(int(0))',
-      '    time.sleep(duration)',
-      '    stop()'
-  ]
-);
-var stop = Blockly.Python.provideFunction_(
-  'stop',
-  [
-      'def stop():',
-      '    RMOTOR1.off()',
-      '    RMOTOR1_PWM.duty(int(0))',
-      '    LMOTOR1.off()',
-      '    LMOTOR1_PWM.duty(int(0))',
-      '    RMOTOR2.off()',
-      '    RMOTOR2_PWM.duty(int(0))',
-      '    LMOTOR2.off()',
-      '    LMOTOR2_PWM.duty(int(0))'
-  ]
-);
-
-  var move = block.getFieldValue('move');
-  var speed = block.getFieldValue('speed');
-  var time = block.getFieldValue('time');
-
- 
-  var code = '';
-  if (move == 'forward') {
-    
-      
-    code = 'forward_for_sec' + '(' + speed + ', '+ time +')\n';
-  } else if (move == 'backward') {
-    
-      
-    code = 'backward_for_sec' + '(' + speed + ', '+ time +')\n';
-  } else if (move == 'left') {
-    
-      
-    code = 'left_for_sec' + '(' + speed + ', '+ time +')\n';
-  } else if (move == 'right') {
-    
-      
-    code = 'right_for_sec' + '(' + speed + ', '+ time +')\n';
-  }
-  return code;
-};
-Blockly.Python['newstopMotor'] = function(block) {
-  Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
-  Blockly.Python.definitions_['import_machine'] = 'import machine';
-  Blockly.Python.definitions_['import_time'] = 'import time';
-
-  var stop = Blockly.Python.provideFunction_(
-    'stop',
-    [
-        'def stop():',
-        '    RMOTOR1.off()',
-        '    RMOTOR1_PWM.duty(int(0))',
-        '    LMOTOR1.off()',
-        '    LMOTOR1_PWM.duty(int(0))',
-        '    RMOTOR2.off()',
-        '    RMOTOR2_PWM.duty(int(0))',
-        '    LMOTOR2.off()',
-        '    LMOTOR2_PWM.duty(int(0))'
-    ]
-);
-
-  var code = 'stop()\n';
-  
-  return code;
-  
-};
+  };
   
   // Moter 2.0 End //////////////////////////////////// .
   
@@ -843,133 +808,137 @@ Blockly.Python['newstopMotor'] = function(block) {
                   }
                   return code;
                 };
-Blockly.Python['new_motor3'] = function(block) {
-  Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
-  Blockly.Python.definitions_['import_machine'] = 'import machine';
-  Blockly.Python.definitions_['import_time'] = 'import time';
+  Blockly.Python['new_motor3'] = function(block) {
+    Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
+    Blockly.Python.definitions_['import_machine'] = 'import machine';
+    Blockly.Python.definitions_['import_time'] = 'import time';
+    
+    var motorpin = Blockly.Python.provideFunction_(
+      'motorpin',
+      [
+          'RMOTOR1 = Pin(26, Pin.OUT)',
+          'LMOTOR1 = Pin(14, Pin.OUT)',
+          'RMOTOR2 = Pin(25, Pin.OUT)',
+          'LMOTOR2 = Pin(27, Pin.OUT)',
+          'RMOTOR1_PWM = PWM(Pin(26), freq=1000)',
+          'LMOTOR1_PWM = PWM(Pin(14), freq=1000)',
+          'RMOTOR2_PWM = PWM(Pin(25), freq=1000)',
+          'LMOTOR2_PWM = PWM(Pin(27), freq=1000)',
+      ]
+  );
+    var backward = Blockly.Python.provideFunction_(
+      'backward',
+      [
+          'def backward(speed):',
+          '    RMOTOR1.off()',
+          '    RMOTOR1_PWM.duty(int(0))',
+          '    LMOTOR1.off()',
+          '    LMOTOR1_PWM.duty(int(0))',
+          '    RMOTOR2.on()',
+          '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
+          '    LMOTOR2.on()',
+          '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))'
+      ]
+  );
   
-  var motorpin = Blockly.Python.provideFunction_(
-    'motorpin',
-    [
-        'RMOTOR1 = Pin(26, Pin.OUT)',
-        'LMOTOR1 = Pin(14, Pin.OUT)',
-        'RMOTOR2 = Pin(25, Pin.OUT)',
-        'LMOTOR2 = Pin(27, Pin.OUT)',
-        'RMOTOR1_PWM = PWM(Pin(26), freq=1000)',
-        'LMOTOR1_PWM = PWM(Pin(14), freq=1000)',
-        'RMOTOR2_PWM = PWM(Pin(25), freq=1000)',
-        'LMOTOR2_PWM = PWM(Pin(27), freq=1000)',
+  var forward = Blockly.Python.provideFunction_(
+      'forward',
+      [
+          'def forward(speed):',
+          '    RMOTOR1.on()',
+          '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
+          '    LMOTOR1.on()',
+          '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
+          '    RMOTOR2.off()',
+          '    RMOTOR2_PWM.duty(int(0))',
+          '    LMOTOR2.off()',
+          '    LMOTOR2_PWM.duty(int(0))'
+      ]
+  );
+    
+    var right_forward = Blockly.Python.provideFunction_(
+      `right_forward`,
+      ['def right_forward(speed):',
+      '     RMOTOR1.on()',
+      '     RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
+      '     LMOTOR1.off()',
+      '     LMOTOR1_PWM.duty(int(0))',
+      '     RMOTOR2.off()',
+      '     RMOTOR2_PWM.duty(int(0))',
+      '     LMOTOR2.off()',
+      '     LMOTOR2_PWM.duty(int(0))',
     ]
-);
-  var backward = Blockly.Python.provideFunction_(
-    'backward',
-    [
-        'def backward(speed):',
-        '    RMOTOR1.off()',
-        '    RMOTOR1_PWM.duty(int(0))',
-        '    LMOTOR1.off()',
-        '    LMOTOR1_PWM.duty(int(0))',
-        '    RMOTOR2.on()',
-        '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-        '    LMOTOR2.on()',
-        '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))'
+      );
+  var right_backward = Blockly.Python.provideFunction_(
+      `right_backward`,
+      ['def right_backward(speed):',
+      '     RMOTOR1.off()',
+      '     RMOTOR1_PWM.duty(int(0))',
+      '     LMOTOR1.off()',
+      '     LMOTOR1_PWM.duty(int(0))',
+      '     RMOTOR2.on()',
+      '     RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
+      '     LMOTOR2.off()',
+      '     LMOTOR2_PWM.duty(int(0))',
     ]
-);
-
-var forward = Blockly.Python.provideFunction_(
-    'forward',
-    [
-        'def forward(speed):',
-        '    RMOTOR1.on()',
-        '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-        '    LMOTOR1.on()',
-        '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-        '    RMOTOR2.off()',
-        '    RMOTOR2_PWM.duty(int(0))',
-        '    LMOTOR2.off()',
-        '    LMOTOR2_PWM.duty(int(0))'
+      );
+  var left_forward = Blockly.Python.provideFunction_(
+      `left_forward`,
+      ['def left_forward(speed):',
+      '     RMOTOR1.off()',
+      '     RMOTOR1_PWM.duty(int(0))',
+      '     LMOTOR1.on()',
+      '     LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
+      '     RMOTOR2.off()',
+      '     RMOTOR2_PWM.duty(int(0))',
+      '     LMOTOR2.off()',
+      '     LMOTOR2_PWM.duty(int(0))',
     ]
-);
+      );
   
-  var right_forward = Blockly.Python.provideFunction_(
-    `right_forward`,
-    ['def right_forward(speed):',
-    '     RMOTOR1.on()',
-    '     RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-    '     LMOTOR1.off()',
-    '     LMOTOR1_PWM.duty(int(0))',
-    '     RMOTOR2.off()',
-    '     RMOTOR2_PWM.duty(int(0))',
-    '     LMOTOR2.off()',
-    '     LMOTOR2_PWM.duty(int(0))',
-  ]
-    );
-var right_backward = Blockly.Python.provideFunction_(
-    `right_backward`,
-    ['def right_backward(speed):',
-    '     RMOTOR1.off()',
-    '     RMOTOR1_PWM.duty(int(0))',
-    '     LMOTOR1.off()',
-    '     LMOTOR1_PWM.duty(int(0))',
-    '     RMOTOR2.on()',
-    '     RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-    '     LMOTOR2.off()',
-    '     LMOTOR2_PWM.duty(int(0))',
-  ]
-    );
-var left_forward = Blockly.Python.provideFunction_(
-    `left_forward`,
-    ['def left_forward(speed):',
-    '     RMOTOR1.off()',
-    '     RMOTOR1_PWM.duty(int(0))',
-    '     LMOTOR1.on()',
-    '     LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-    '     RMOTOR2.off()',
-    '     RMOTOR2_PWM.duty(int(0))',
-    '     LMOTOR2.off()',
-    '     LMOTOR2_PWM.duty(int(0))',
-  ]
-    );
-
-var left_backward = Blockly.Python.provideFunction_(
-    `left_backward`,
-    ['def left_backward(speed):',
-    '     RMOTOR1.off()',
-    '     RMOTOR1_PWM.duty(int(0))',
-    '     LMOTOR1.off()',
-    '     LMOTOR1_PWM.duty(int(0))',
-    '     RMOTOR2.off()',
-    '     RMOTOR2_PWM.duty(int(0))',
-    '     LMOTOR2.on()',
-    '     LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-  ]
-    );
-
-
-  var motor = block.getFieldValue('motor');
-  var move = block.getFieldValue('move');
-  var speed = block.getFieldValue('speed');
-
-  if (motor == 'left' && move == 'forward') {
-    code = 'left_forward' + '(' + speed + ')\n';
-
-  }else if(motor == 'left' && move == 'backward'){
-    code = 'left_backward' + '(' + speed + ')\n';
-    
-  }else if(motor == 'right'&& move == 'forward'){
-    code = 'right_forward' + '(' + speed + ')\n';
-    
-  }else if(motor == 'right'&& move == 'backward'){
-    code = 'right_backward' + '(' + speed + ')\n';
-    
-  }else if(motor == 'all'&& move == 'forward'){
-    code = 'forward' + '(' + speed + ')\n';
-  }else{
-    code = 'backward' + '(' + speed + ')\n';
-    
-  }
-  return code;
-};
+  var left_backward = Blockly.Python.provideFunction_(
+      `left_backward`,
+      ['def left_backward(speed):',
+      '     RMOTOR1.off()',
+      '     RMOTOR1_PWM.duty(int(0))',
+      '     LMOTOR1.off()',
+      '     LMOTOR1_PWM.duty(int(0))',
+      '     RMOTOR2.off()',
+      '     RMOTOR2_PWM.duty(int(0))',
+      '     LMOTOR2.on()',
+      '     LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
+    ]
+      );
+  
+  
+    var motor = block.getFieldValue('motor');
+    var move = block.getFieldValue('move');
+    var speed = block.getFieldValue('speed');
+  
+    var code = ``;
+    if(speed == 0){
+      code = `stop()\n`;
+    }else{
+    if (motor == 'left' && move == 'forward') {
+      code = 'left_forward' + '(' + speed + ')\n';
+  
+    }else if(motor == 'left' && move == 'backward'){
+      code = 'left_backward' + '(' + speed + ')\n';
+      
+    }else if(motor == 'right'&& move == 'forward'){
+      code = 'right_forward' + '(' + speed + ')\n';
+      
+    }else if(motor == 'right'&& move == 'backward'){
+      code = 'right_backward' + '(' + speed + ')\n';
+      
+    }else if(motor == 'all'&& move == 'forward'){
+      code = 'forward' + '(' + speed + ')\n';
+    }else{
+      code = 'backward' + '(' + speed + ')\n';
+    }
+    }
+    return code;
+  };
   Blockly.Python['ir_sig_new2'] = function(block) {
     Blockly.Python.definitions_['import_time'] = 'import time';
     Blockly.Python.definitions_['import_utime'] = 'import utime';
@@ -1243,56 +1212,43 @@ var left_backward = Blockly.Python.provideFunction_(
     };
     // ------------------------------------------------------------------------------------------------------
     
-    Blockly.Python['line_sensor_if'] = function(block) {
-      
-       
-        var sensorpin = block.getFieldValue('pin_sen');
-        var number_sensor = block.getFieldValue('math');
-        var sensorlr = block.getFieldValue('sensor_lr');
     
-        
-        code = `adcRead(${sensorpin}) ${number_sensor} ${sensorlr}`;
-        
-        return [code, Blockly.Python.ORDER_NONE];
-    
-        
-    };
     // ------------------------------------------------------------------------------------------------------
     
     Blockly.Python['line_sensor_if3'] = function(block) {
-  
-  Blockly.Python.definitions_['from_machine_import_pin_pwm_adc'] = 'from machine import Pin,PWM,ADC';
-
-  
-  var functionName = Blockly.Python.provideFunction_(
-    'adcRead',
-    [
-        'def adcRead(analog_pin):',
-        '    adc = ADC(Pin(analog_pin))',
-        '    adc.atten(ADC.ATTN_11DB)',
-        '    adc.width(ADC.WIDTH_12BIT)',
-        '    return adc.read()',
-    ]
-);
+      
+      Blockly.Python.definitions_['from_machine_import_pin_pwm_adc'] = 'from machine import Pin,PWM,ADC';
     
-    var sensorpin = block.getFieldValue('pin_sen');
-    var bw = block.getFieldValue('math');
-                
-    code = '';;
-    if(sensorpin == 35 && bw == 1){
-        code = `adcRead(35) < ssl`;
-      }else if(sensorpin == 35 && bw == 2){
-        code = `adcRead(35) > ssl`;
-      }else if(sensorpin == 34 && bw == 1){
-        code = `adcRead(34) < ssr`;
-      }else if(sensorpin == 34 && bw == 2){
-        code = `adcRead(34) > ssr`;
-      }else{
-        code = `404`;
-      }
-    
-      return [code, Blockly.Python.ORDER_NONE];
-};
+      
+      var functionName = Blockly.Python.provideFunction_(
+        'adcRead',
+        [
+            'def adcRead(analog_pin):',
+            '    adc = ADC(Pin(analog_pin))',
+            '    adc.atten(ADC.ATTN_11DB)',
+            '    adc.width(ADC.WIDTH_12BIT)',
+            '    return adc.read()',
+        ]
+    );
+        
+        var sensorpin = block.getFieldValue('pin_sen');
+        var bw = block.getFieldValue('math');
+                    
+        code = '';;
+        if(sensorpin == 35 && bw == 1){
+            code = `adcRead(35) < ssl`;
+          }else if(sensorpin == 35 && bw == 2){
+            code = `adcRead(35) > ssl`;
+          }else if(sensorpin == 34 && bw == 1){
+            code = `adcRead(34) < ssr`;
+          }else if(sensorpin == 34 && bw == 2){
+            code = `adcRead(34) > ssr`;
+          }else{
+            code = `404`;
+          }
+        
+          return [code, Blockly.Python.ORDER_NONE];
+    };
     
     // ------------------------------------------------------------------------------------------------------
     Blockly.Python['read_ssl_ssr'] = function(block) {
@@ -1316,14 +1272,15 @@ var left_backward = Blockly.Python.provideFunction_(
     
       code = '';;
       if(sensorlrread == "ssr"){
-        code = `print((adcRead(34))\n`;
+        code = `print((adcRead(34)))\n`;
       }else if(sensorlrread == "ssl"){
-        code = `print((adcRead(35))\n`;
+        code = `print((adcRead(35)))\n`;
       }
       return code;
       
     };
     // ------------------------------------------------------------------------------------------------------
+
     Blockly.Python['on_start'] = function(block) {
       // Disable automatic indentation
       Blockly.Python.INDENT = '';
@@ -1361,12 +1318,20 @@ Blockly.Python['switch_is_release_beetle'] = function (block) {
     return [code, Blockly.Python.ORDER_NONE];
 };
 
+
 Blockly.Python['switch_get_value_beetle'] = function (block) {
-    Blockly.Python.definitions_['import_switch'] = 'import switch';
+    Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
 
     var dropdown_n = block.getFieldValue('n');
 
-    var code = `switch.value(switch.${dropdown_n})`;
+    var code = ``;;
+    if (dropdown_n == 'a'){
+        code = `beetlecar.button_a.value()`;
+    }else if(dropdown_n == 'b'){
+        code = `beetlecar.button_b.value()`;
+    }else{
+        code = `404`
+    }
     return [code, Blockly.Python.ORDER_NONE];
 };
 // --------------------------------------------------------------------------------------------

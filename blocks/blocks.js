@@ -14,11 +14,13 @@ Blockly.Msg.darth_vader = "darth vader theme";
 Blockly.Msg.jingle_bell = "jingle bell";
 Blockly.Msg.mary_little_lamb = "mary had a little lamb";
 Blockly.Msg.bitsy_spider  = "bitsy spider ";
+
 //03/05/2024
 Blockly.Msg.badboy  = "badboy";
 Blockly.Msg.old_macdonald  = "old macdonald";
 Blockly.Msg.harry_potter  = "harry potter";
 //03/05/2024
+
 Blockly.Msg.but1 = "1";
 Blockly.Msg.but2 = "2";
 Blockly.Msg.but3 = "3";
@@ -42,14 +44,14 @@ Blockly.Msg.whitetext = "white";
 Blockly.Msg.left = "left";
 Blockly.Msg.right = "right";
 
-
 Blockly.defineBlocksWithJsonArray([
 
   ////////MOTOR 2.0 Start ///////////
 
- {
+
+  {
     "type": "new_motor",
-    "message0": "move %1 pwm %2",
+    "message0": "move %1 speed %2%",
     "args0": [
       {
         "type": "field_dropdown",
@@ -90,7 +92,7 @@ Blockly.defineBlocksWithJsonArray([
   
   {
     "type": "new_motor2",
-    "message0": "move %1 pwm %2 for %3 sec",
+    "message0": "move %1 speed %2% %3 second",
     "args0": [
       {
         "type": "field_dropdown",
@@ -146,7 +148,7 @@ Blockly.defineBlocksWithJsonArray([
   },
    {
     "type": "new_motor3",
-    "message0": "motor %1 move %2 at speed %3",
+    "message0": "motor %1 move %2 speed %3 %",
     "args0": [
       {
         "type": "field_dropdown",
@@ -206,6 +208,7 @@ Blockly.defineBlocksWithJsonArray([
     "tooltip": "",
     "helpUrl": ""
   },
+
  ////////MOTOR 2.0 end ///////////
 
 //Ultrasonic Start ///////////////////////////
@@ -538,7 +541,6 @@ Blockly.defineBlocksWithJsonArray([
 //03/05/2024
 
 
-
 //IR_START ///////////////////////////////////////
 {  
     "type": "ir_get_sig",
@@ -555,82 +557,7 @@ Blockly.defineBlocksWithJsonArray([
 
 
  //Line Tracking Start ///////////////////////////
- {
-  "type": "linetracking_threshold",
-  "message0": "line tracking set value threshold: black  %1 white %2",
-  "args0": [
-    {
-      "type": "field_number",
-      "name": "black",
-      "value": 0
-    },
-    {
-      "type": "field_number",
-      "name": "white",
-      "value": 0
-    }
-  ],
-  "previousStatement": null,
-  "nextStatement": null,
-  "colour": "ad1457",
-  "tooltip": "",
-  "helpUrl": ""
-},
-  {
-    "type": "linetracking_sensor",
-    "message0": "read %1 %2 threshold",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "sensor",
-        "options": [
-          [
-            "sensor1",
-            "sensor1_value"
-          ],
-          [
-            "sensor2",
-            "sensor2_value"
-          ],
-          [
-            "sensor3",
-            "sensor3_value"
-          ]
-        ]
-      },
-      {
-        "type": "field_dropdown",
-        "name": "operator",
-        "options": [
-          [
-            "=",
-            "=="
-          ],
-          [
-            ">",
-            ">"
-          ],
-          [
-            "<",
-            "<"
-          ],
-          [
-            ">=",
-            ">="
-          ],
-          [
-            "<=",
-            "<="
-          ]
-        ]
-      }
-    ],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": "ad1457",
-    "tooltip": "",
-    "helpUrl": ""
-  },
+
 
     { 
     "type": "ir_sig_new2",
@@ -769,23 +696,23 @@ Blockly.defineBlocksWithJsonArray([
     "helpUrl": ""
   },
   //MATH GROUP End ///////////////////////////////
-  //bool_if
-  {
-    "type": "bool_tf",
-    "message0": "true",
-    "output": "Boolean",
-    "colour": "00A4A6",
-    "tooltip": "",
-    "helpUrl": ""
-  },
-  {
-    "type": "bool_false",
-    "message0": "false",
-    "output": "Boolean",
-    "colour": "00A4A6",
-    "tooltip": "",
-    "helpUrl": ""
-  },
+      //bool_if
+      {
+        "type": "bool_tf",
+        "message0": "true",
+        "output": "Boolean",
+        "colour": "00A4A6",
+        "tooltip": "",
+        "helpUrl": ""
+      },
+      {
+        "type": "bool_false",
+        "message0": "false",
+        "output": "Boolean",
+        "colour": "00A4A6",
+        "tooltip": "",
+        "helpUrl": ""
+      },
   //break  
   {
      
@@ -798,167 +725,108 @@ Blockly.defineBlocksWithJsonArray([
     "tooltip": "",
     "helpUrl": ""
   },
-  //linetrack  
-  {        
-    "type": "line_sensor",
-    "message0": "line tracking sensor %1",
-    "args0":[
+//linetrack  
+  
+
+
+
+{
+  "type": "set_ssr_ssl",
+  "message0": "set %1 %2",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "ssr_ssl",
+      "options": [
+        ["ssr" , "ssr"],
+        ["ssl" , "ssl"],     
+      ]
+      
+    },
+    {
+      "type": "field_number",
+      "name": "pin",
+      
+    }
+    ],
+  "inputsInline": true,
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": "ad1457",
+  "tooltip": "",
+  "helpUrl": ""
+},
+
+{        
+  "type": "line_sensor_if3",
+  "message0": "line tracking %1 is %2",
+  "args0":[
     {
       "type": "field_dropdown",
       "name": "pin_sen",
       "options": [
-        ["left" , "35"],
-        ["right" , "34"],
+        [Blockly.Msg.left , "35"],
+        [Blockly.Msg.right , "34"],
         
       ]
         
-    }
+    },
+    {
+      "type": "field_dropdown",
+      "name": "math",
+      "options": [
+        [Blockly.Msg.blacktext , "1"],
+        [Blockly.Msg.whitetext , "2"],
+        
+      ]
+    
+    },
+    
   ], 
-"output": null,
-"colour": "ad1457",
-"tooltip": "",
-"helpUrl": "",
-  
-},
-
-{        
-"type": "line_sensor_if",
-"message0": "line tracking %1 %2 %3",
-"args0":[
-{
-"type": "field_dropdown",
-"name": "pin_sen",
-"options": [
-  ["left" , "35"],
-  ["right" , "34"],
-  
-]
-  
-},
-{
-"type": "field_dropdown",
-"name": "math",
-"options": [
-  [">" , ">"],
-  ["<" , "<"],
-  
-]
-
-},
-{
-"type": "field_dropdown",
-"name": "sensor_lr",
-"options": [
-  ["ssl" , "ssl"],
-  ["ssr" , "ssr"],
-  
-]
-
-},
-], 
-"output": null,
-"colour": "ad1457",
-"tooltip": "",
-"helpUrl": "",
-
-},
-
-{
-"type": "set_ssr_ssl",
-"message0": "set %1 %2",
-"args0": [
-{
-  "type": "field_dropdown",
-  "name": "ssr_ssl",
-  "options": [
-    ["ssr" , "ssr"],
-    ["ssl" , "ssl"],     
-  ]
-  
-},
-{
-  "type": "field_number",
-  "name": "pin",
-  
-}
-],
-"inputsInline": true,
-"previousStatement": null,
-"nextStatement": null,
-"colour": "ad1457",
-"tooltip": "",
-"helpUrl": ""
-},
-
-{        
-"type": "line_sensor_if3",
-"message0": "line tracking %1 is %2",
-"args0":[
-{
-  "type": "field_dropdown",
-  "name": "pin_sen",
-  "options": [
-    [Blockly.Msg.left , "35"],
-    [Blockly.Msg.right , "34"],
-    
-  ]
-    
-},
-{
-  "type": "field_dropdown",
-  "name": "math",
-  "options": [
-    [Blockly.Msg.blacktext , "1"],
-    [Blockly.Msg.whitetext , "2"],
-    
-  ]
-
-},
-
-], 
-"output": null,
-"colour": "ad1457",
-"tooltip": "",
-"helpUrl": "",
-
-},
-
-{
-"type": "read_ssl_ssr",
-"message0": "read %1",
-"args0": [
-{
-  "type": "field_dropdown",
-  "name": "ssr_ssl",
-  "options": [
-    ["ssr" , "ssr"],
-    ["ssl" , "ssl"],     
-  ]
-  
-},
-],
-"inputsInline": true,
-"previousStatement": null,
-"nextStatement": null,
-"colour": "ad1457",
-"tooltip": "",
-"helpUrl": ""
-},
-//on_start  
-{
-  "type": "on_start",
-  "message0": "on start",
-  "message1": "%1",
-  "args1": [{
-    "type": "input_statement",
-    "name": "DO"
-  }],
-  "previousStatement": null,
-  "nextStatement": null,
-  "colour": "#D4AC0D",
+  "output": null,
+  "colour": "ad1457",
   "tooltip": "",
   "helpUrl": "",
+
 },
+
+{
+  "type": "read_ssl_ssr",
+  "message0": "read %1",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "ssr_ssl",
+      "options": [
+        ["ssr" , "ssr"],
+        ["ssl" , "ssl"],     
+      ]
+      
+    },
+  ],
+  "inputsInline": true,
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": "ad1457",
+  "tooltip": "",
+  "helpUrl": ""
+},
+  //on_start  
+  {
+    "type": "on_start",
+    "message0": "on start",
+    "message1": "%1",
+    "args1": [{
+      "type": "input_statement",
+      "name": "DO"
+    }],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": "#D4AC0D",
+    "tooltip": "",
+    "helpUrl": "",
+},
+
 //switch
 {
   "type": "switch_is_press_beetle",
@@ -1017,12 +885,12 @@ Blockly.defineBlocksWithJsonArray([
       "name": "n",
       "options": [
         [
-          "S1",
-          "S1"
+          "sw_a",
+          "a"
         ],
         [
-          "S2",
-          "S2"
+          "sw_b",
+          "b"
         ]
       ]
     }
@@ -1131,26 +999,27 @@ Blockly.defineBlocksWithJsonArray([
   "tooltip": "",
   "helpUrl": ""
 },
- //LOOP GROUP
- {
-  "type": "controls_every",
-  "message0": "every %1 ms",
-  "args0": [{
-    "type": "input_value",
-    "name": "TIMES",
-    "check": "Number"
-  }],
-  "message1": "%1",
-  "args1": [{
-    "type": "input_statement",
-    "name": "DO"
-  }],
-  "previousStatement": null,
-  "nextStatement": null,
-  "colour": "#D4AC0D",
-  "tooltip": "",
-  "helpUrl": ""
-},
+   //LOOP GROUP
+   {
+    "type": "controls_every",
+    "message0": "every %1 ms",
+    "args0": [{
+      "type": "input_value",
+      "name": "TIMES",
+      "check": "Number"
+    }],
+    "message1": "%1",
+    "args1": [{
+      "type": "input_statement",
+      "name": "DO"
+    }],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": "#D4AC0D",
+    "tooltip": "",
+    "helpUrl": ""
+  },
+
 //abs_of
 {
   "type": "abs_of",
@@ -1169,4 +1038,5 @@ Blockly.defineBlocksWithJsonArray([
   "tooltip": "",
   "helpUrl": ""
 },
+
 ]);
