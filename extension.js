@@ -11,7 +11,7 @@
                         {
                             xml: '<label text="LED"></label>',
                         },
-                        "poten_ifelse2",
+                        
                         {
                             xml: `
                                 <block type="ledset">
@@ -65,28 +65,7 @@
                                 </block>
                             `
                         },
-                        {
-                            xml: `
-                                <block type="poten_ifelse">
-                                    <value name="value">
-                                        <shadow type="math_number">
-                                            <field name="NUM">200</field>
-                                        </shadow>
-                                    </value>
-                                </block>
-                            `
-                        },
-                        {
-                            xml: `
-                                <block type="if_poten">
-                                    <value name="value">
-                                        <shadow type="math_number">
-                                            <field name="NUM">200</field>
-                                        </shadow>
-                                    </value>
-                                </block>
-                            `
-                        },
+                        
                         
                         
                         
