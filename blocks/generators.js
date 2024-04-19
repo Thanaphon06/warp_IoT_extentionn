@@ -1,1290 +1,612 @@
-
-        // servo Start ////////////////////////////////
-        Blockly.Python['servo'] = function(block) { 
-          
-          Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin,PWM';
-          
-          var servopins1 = Blockly.Python.provideFunction_(
-            'servopins1',
-            [
-                'def servo_LiftUp(angle):',
-                '    PWM(Pin(16), freq=50).duty(int(0.5 * angle + 31))',
-                
-            ]
-        );
-        var servopins2 = Blockly.Python.provideFunction_(
-          'servopins2',
-          [
-              'def servo_Clamp(angle):',
-              '    PWM(Pin(17), freq=50).duty(int((4/9) * angle + 48))',
-              
-          ]
-      );
-        
-            var value_pin = block.getFieldValue('pin');
-            var value_angle = block.getFieldValue('angle');
-      
-            var code = ``; 
-            if (value_pin == '16') {
-              code = `servo_LiftUp(${value_angle})\n`
-            if(value_angle >= 90){
-              code = `servo_LiftUp(90)\n`
-              }
-            if(value_angle <= 0){
-              code = `servo_LiftUp(0)\n`
-            }
-          }
-            else if(value_pin == '17'){
-              code = `servo_Clamp(${value_angle})\n`
-            if(value_angle >= 90){
-              code = `servo_Clamp(90)\n`
-            }
-            if(value_angle <= 0){
-              code = `servo_Clamp(0)\n`
-            }
-          }
-      
-            return code;
-          };
-          // servo End //////////////////////////////////
-          
-          
-          //03/05/2024
-          // buzzer Start ///////////////////////////////
-          Blockly.Python['buzzer1'] = function(block) {
-          Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-    
-        var value_freq = Blockly.Python.valueToCode(block, 'freq', Blockly.Python.ORDER_ATOMIC);
-        var value_time = Blockly.Python.valueToCode(block, 'time', Blockly.Python.ORDER_ATOMIC);
-        
-        var code = `beetlecar.buzzerWrite(23, freq=${value_freq}, stop=${value_time})\n`;
-        return code;
-        };
-        Blockly.Python['buzzer2'] = function(block) {
-          Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';  
-       
-        var value_freq = Blockly.Python.valueToCode(block, 'freq', Blockly.Python.ORDER_ATOMIC);
-        var code = `beetlecar.buzzerWrite(23, freq=${value_freq})\n`;
-        return code;
-        };
-        Blockly.Python['buzzer3'] = function(block) {
-          Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
+  //buttonset
+  Blockly.Python['buttonset'] = function(block)
+  {
+    Blockly.Python.definitions_['import_machine'] = 'import machine';
+    var functionName = Blockly.Python.provideFunction_(
+    'buttonset',
+    ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(pin):',
+    '\tbutton_pin = machine.Pin(pin, machine.Pin.IN, machine.Pin.PULL_UP)',
+    '\tbutton_state = button_pin.value()',
+    '\treturn button_state',]);
   
-        var code = `beetlecar.buzzerWrite(23, duty=0)\n`;
-        return code;
-        };
-          
-        Blockly.Python['buz_play_music'] = function(block) {
-          Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin,PWM';
-          Blockly.Python.definitions_['from_time_import_sleep'] = 'from time import sleep';
-        
-            //Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-        
-              var select_song = block.getFieldValue('music');
+    var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+    var code = `${functionName}(${value_pin})`;
+    return [code, Blockly.Python.ORDER_NONE];
+  };
+  function buzzerWriteFunction() {
+      let board = boards.find(board => board.id === boardId);
+    
+      const _duty = board?.chip === "RP2" ? "duty_u16" : "duty";
+      const _max_duty = board?.chip === "RP2" ? "65535" : "1023";
+    
+      return Blockly.Python.provideFunction_(
+        'buzzerWrite',
+        ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(pin, freq=1000, duty=50, stop=0):',
+        '  pwm = machine.PWM(machine.Pin(pin))',
+        '  pwm.freq(freq)',
+        '  pwm.' + _duty + '(int(duty / 100 * ' + _max_duty + '))',
+        '  if stop > 0:',
+        '    time.sleep(stop)',
+        '    pwm.' + _duty + '(0)'
+      ]);
+    }
+            // button Start /////////////////////////////////
+            Blockly.Python['switch_iot'] = function(block) {
+              Blockly.Python.definitions_['import_machine'] = 'import machine';
+              var number_button = block.getFieldValue('pin');
   
               var functionName = Blockly.Python.provideFunction_(
-                'scale',
-                ['scale5 = [261,277,293,311,329,349,369,392,415,440,466,493,0 ,523 , 554 , 587 ,622 , 659 , 698 ,739 , 783 , 830 , 880 , 932 , 987 , 1046 ]',
-                 'happy_birthday = [0 , 0 , 2 , 0 ,5 ,4 ,12, 0 ,0 , 2 ,0 ,7 ,5 ,12,0 ,0 ,13 , 9 , 5,4 ,2, 12 , 9 , 9 , 9, 5 , 7 ,5]',
-                 'jingle_bell = [4,4,4,12,4,4,4,12,4,7,0,2,4,12,5,5,5,12,5,4,4,4,4,2,2,4,2,12,7]',
-                 'mary_little_lamb = [4,2,0,2,4,4,4,12,2,2,2,12,4,7,7,12,4,2,0,2,4,4,4,12,0,2,2,4,2,0]',
-                 'badboy = [3,5,7,12,7,3,3,12,3,5,7,5,5,7,3,12,3,5,7,12,7,3,3,12,3,5,7,5,5,7,3,12]',
-                 'harry_potter =[11,17,20,19,17,12,24,22,12,19,12,17,20,19,15,12,18,11]',
-                ]
-              );
-  
+              'buttonset',
+              ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(pin):',
+              '\tbutton_pin = machine.Pin(pin, machine.Pin.IN, machine.Pin.PULL_UP)',
+              '\tbutton_state = button_pin.value()',
+              '\treturn button_state',]);
+            
               
-            var functionName = Blockly.Python.provideFunction_(
-              'buzzerWrite()',
-              ['def ' + 'buzzerWrite(pin, freq=1000, duty=50, stop=0)' + ':',
-               '    pwm = PWM(Pin(pin))',
-               '    pwm.freq(freq)',
-               '    pwm.duty(int(duty / 100 * 1023))',
-               '    if stop > 0:',
-               '      sleep(stop)',
-               '      pwm.duty(0)',
-              ]
-            );
-              code = '';;
-              if(select_song == 1){
-                code = `for i in happy_birthday:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
-              }else if(select_song == 3){
-                code = `for i in jingle_bell:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
-              }else if(select_song == 4){
-                code = `for i in mary_little_lamb:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
-              }else if(select_song == 5){
-                code = `for i in badboy:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
-              }else if(select_song == 7){
-                code = `for i in harry_potter:\n    buzzerWrite(23, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
-              }
-              return code;
-            };
-    
-          // buzzer End /////////////////////////////////
-          //03/05/2024
-          // LED Start //////////////////////////////////
-  
-          Blockly.Python['led_onoff'] = function(block) {
-          
-          Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-        
-            var dropdown_trig = block.getFieldValue('pin_trig');
-            code = '';;
-            if(dropdown_trig == 1){
-              code = `beetlecar.led_left_on()\n`;
-            }else if(dropdown_trig == 2){
-              code = `beetlecar.led_left_off()\n`;
-            }else if(dropdown_trig == 3){
-              code = `beetlecar.led_right_on()\n`;
-            }else if(dropdown_trig == 4){
-              code = `beetlecar.led_right_off()\n`;
-            }
-            return code;
-          };
-          // LED End /////////////////////////////////////
-          
-          // Ultrasonic Start ////////////////////////////
-  
-          Blockly.Python['ultra_read'] = function(block) {
-            
-            Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-            Blockly.Python.definitions_['import_sleep_us'] = 'from machine import time_pulse_us';
-            Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
-            Blockly.Python.definitions_['from_time_import_sleep_us'] = 'from time import sleep_us';
-  
-            var functionName = Blockly.Python.provideFunction_(
-              'distance()',
-              ['def ' + 'distance()' + ':',
-               '    return read(2, 15)'
-              ]
-            );
-  
-            var functionName = Blockly.Python.provideFunction_(
-              'read(trig_pin, echo_pin)',
-              ['def ' + 'read(trig_pin, echo_pin)' + ':',
-               '    trigger = Pin(trig_pin, mode=Pin.OUT)',
-               '    echo = Pin(echo_pin, mode=Pin.IN)',
-               '    trigger.value(0)',
-               '    sleep_us(5)',
-               '    trigger.value(1)',
-               '    sleep_us(10)',
-               '    trigger.value(0)',
-               '    try:',
-               '        pulse_time = time_pulse_us(echo, 1, 1000000)',
-               '        d = (pulse_time / 2) / 29.1',
-               '        return int(d) if d < 400 else -1',
-               '    except OSError as ex:',
-               '        return -1'
-              ]
-            );
-            
-            code = 'distance()';
-            return [code, Blockly.Python.ORDER_NONE];
-          },
-  
-          
-          Blockly.Python['ultra_read_if'] = function(block) {
-            Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-          
-            var math_choice = block.getFieldValue('math');
-            var read_number = block.getFieldValue('read_num');
-    
-           //var read_number = Block.Python.valueToCode(block, 'read_num', Blockly.Python.ORDER_ATOMIC);
-          
-            code = `beetlecar.distance() ${math_choice} ${read_number}`;
-            return [code, Blockly.Python.ORDER_NONE];
-          };
-          // Ultrasonic End ///////////////////////////////
-          
-          // Neo_pixel Start //////////////////////////////
-          
-          Blockly.Python['neopixel_fill_color1'] = function(block) {
-          //Blockly.Python.definitions_['from_machine_pin'] = 'from machine import Pin';
-            //Blockly.Python.definitions_['import_neopixel_neo'] = 'from neopixel import NeoPixel';
-          
-            /*Blockly.Python.definitions_['LED_PIN'] = 'LED_PIN = 4';
-            Blockly.Python.definitions_['LED_COUNT'] = 'LED_COUNT = 2';   
-            
-            Blockly.Python.definitions_['np_neo'] = 'np = NeoPixel(Pin(LED_PIN, Pin.OUT), LED_COUNT)'; */
-          Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-            
-            var colour_color = block.getFieldValue('color');
-          
-            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(colour_color);
-            var red = parseInt(result[1], 16);
-            var green = parseInt(result[2], 16);
-            var blue = parseInt(result[3], 16);
-          
-            var code = `for i in range(beetlecar.np.n): beetlecar.np[i] = (${red},${green}, ${blue})\nbeetlecar.neo_on()\n`;
-            return code;
-          };
-          Blockly.Python['neopixel_off'] = function(block) {
-        
-            /*Blockly.Python.definitions_['from_machine_pin'] = 'from machine import Pin';
-            Blockly.Python.definitions_['import_neopixel_neo'] = 'from neopixel import NeoPixel';
-          
-            Blockly.Python.definitions_['LED_PIN'] = 'LED_PIN = 4';
-            Blockly.Python.definitions_['LED_COUNT'] = 'LED_COUNT = 2';   
-            
-            Blockly.Python.definitions_['np_neo'] = 'np = NeoPixel(Pin(LED_PIN, Pin.OUT), LED_COUNT)'; */
-            
-          Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-        
-            
-            var code = `for i in range(beetlecar.np.n): beetlecar.np[i] = (0,0,0)\nbeetlecar.neo_on()\n`;
-            return code;
-          };
-          Blockly.Python['neopixel_toggle'] = function(block) {
-            Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-            Blockly.Python.definitions_['import_time'] = 'import time';
-            /*Blockly.Python.definitions_['import_time'] = 'import time';
-            Blockly.Python.definitions_['from_machine_pin'] = 'from machine import Pin';
-            Blockly.Python.definitions_['import_neopixel_neo'] = 'from neopixel import NeoPixel';
-          
-            Blockly.Python.definitions_['LED_PIN'] = 'LED_PIN = 4';
-            Blockly.Python.definitions_['LED_COUNT'] = 'LED_COUNT = 2';   */
-            Blockly.Python.definitions_['neo_toggle_state'] = 'np_toggle = False';   
-            
-            //Blockly.Python.definitions_['np_neo'] = 'np = NeoPixel(Pin(LED_PIN, Pin.OUT), LED_COUNT)'; 
-            
-        
-            
-            var tog_colors1 = block.getFieldValue('tog_color1');
-            var tog_colors2 = block.getFieldValue('tog_color2');
-          
-            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(tog_colors1);
-            var red = parseInt(result[1], 16);
-            var green = parseInt(result[2], 16);
-            var blue = parseInt(result[3], 16);
-          
-            var result2 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(tog_colors2);
-            var red2 = parseInt(result2[1], 16);
-            var green2 = parseInt(result2[2], 16);
-            var blue2 = parseInt(result2[3], 16);
-          
-           
-            var functionName = Blockly.Python.provideFunction_(
-              `neo_tog`,
-              [`def ` + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + `():`,
-              `  global np_toggle`,
-              `  np_toggle = not np_toggle`,
-              `  if np_toggle:`,
-              `      for i in range(beetlecar.np.n):`,
-              `          beetlecar.np[i] = (${red}, ${green}, ${blue})`,
-              `          time.sleep(0.1) `,
-              `  else:`,
-              `      beetlecar.np.fill((${red2}, ${green2}, ${blue2}))`,
-              `      time.sleep(0.1)`,
-              `  beetlecar.neo_on()`]);
-          
-            var code = '#while True:\nneo_tog()\n'
-            //var code = `for i in range(np.n): np[i] = (${red},${green}, ${blue})\nnp.write()\n`;
-            return code;
-          };
-          Blockly.Python['rainbow_neo'] = function(block) {
-            /*Blockly.Python.definitions_['import_time'] = 'from time import sleep_ms';
-            Blockly.Python.definitions_['from_machine_pin'] = 'from machine import Pin';
-            Blockly.Python.definitions_['import_neopixel_neo'] = 'from neopixel import NeoPixel';
-          
-            Blockly.Python.definitions_['LED_PIN'] = 'LED_PIN = 4';
-            Blockly.Python.definitions_['LED_COUNT'] = 'LED_COUNT = 2';   
-            
-            Blockly.Python.definitions_['np_neo'] = 'np = NeoPixel(Pin(LED_PIN, Pin.OUT), LED_COUNT)'; */
-            Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-            
-            
-          
-            var code = 'beetlecar.rainbow_neo()\n'
-            //var code = `for i in range(np.n): np[i] = (${red},${green}, ${blue})\nnp.write()\n`;
-            return code;
-          };
-          
-        
-          // Neo_pixel End ////////////////////////////////
-          
-          // button Start /////////////////////////////////
-          Blockly.Python['switch'] = function(block) {
-          Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-            
-            
-            var dropdown_button = block.getFieldValue('pin');
-            
-            code = '';;
-            if(dropdown_button == 18){
-              code = `beetlecar.put_button_a()`;
-            }else if(dropdown_button == 5){
-              code = `beetlecar.put_button_b()`;
-            }
-            return [code, Blockly.Python.ORDER_NONE];
-          };
-          Blockly.Python['switch_toggle'] = function(block) {
-            Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-            
-           var dropdown_button = block.getFieldValue('pin');
-        
-           code = '';;
-           if(dropdown_button == 18){
-             code = `beetlecar.toggle_state_a`;
-           }else if(dropdown_button == 5){
-             code = `beetlecar.toggle_state_b`;
-           }
-            return [code, Blockly.Python.ORDER_NONE];
-          };
-          
-          // button End ///////////////////////////////////
-  
-          //BLUE_START ////////////////////////////////////
-  
-          /*
-        Blockly.Python['blue_con'] = function(block) {
-            
-            Blockly.Python.definitions_['import_beetlecar_ble'] = 'import beetlecar_BLE';
-            
-            var bluetooth_name = Blockly.Python.valueToCode(block, 'blue_name', Blockly.Python.ORDER_ATOMIC);
-            var code = `beetlecar_BLE.ble = beetlecar_BLE.ESP32_BLE(${bluetooth_name})\n`
-            return code;
-          };
-          Blockly.Python['blue_command'] = function(block) {
-            Blockly.Python.definitions_['import_beetlecar_ble'] = 'import beetlecar_BLE';
-        
-            
-            var blue_text = Blockly.Python.valueToCode(block, 'text', Blockly.Python.ORDER_ATOMIC);
-            
-            
-            var code = `beetlecar_BLE.ble_msg == ${blue_text}`;
-            return [code, Blockly.Python.ORDER_NONE];
-            };
-            Blockly.Python['blue_msg'] = function(block) {
-                Blockly.Python.definitions_['import_beetlecar_ble'] = 'import beetlecar_BLE';
-            
-                
-                var blue_text_print = Blockly.Python.valueToCode(block, 'text_blue', Blockly.Python.ORDER_ATOMIC);
-                
-                
-                var code = `beetlecar_BLE.ble_msg = ""\nbeetlecar_BLE.ble.send(${blue_text_print})\n`;
-                return code;
-                };*/
-  
-          //BLUE_END ////////////////////////////////////
-        
-        //IR_START ////////////////////////////////////
-  
-        Blockly.Python['ir_get_sig'] = function(block) {
-            
-            Blockly.Python.definitions_['import_beetlecar_ir'] = 'import beetlecar_IR';
-            Blockly.Python.definitions_['import_time'] = 'import time';
-            
-        
-            var code = 'command = beetlecar_IR.read_ircode(beetlecar_IR.ird)\n'
-            return code;
-          };
-    Blockly.Python['ir_com'] = function(block) {
-      Blockly.Python.definitions_['import_beetlecar_ir'] = 'import beetlecar_IR';
-          
-          
-        var ir_but = block.getFieldValue('ir_but');
-          
-        code = '';;
-        if(ir_but == "1"){
-          code = `command == "1"`;
-        }else if(ir_but == "2"){
-          code = `command == "2"`;
-        }else if(ir_but == "3"){
-          code = `command == "3"`;
-        }else if(ir_but == "4"){
-          code = `command == "4"`;
-        }else if(ir_but == "5"){
-          code = `command == "5"`;
-        }else if(ir_but == "6"){
-          code = `command == "6"`;
-        }else if(ir_but == "7"){
-          code = `command == "7"`;
-        }else if(ir_but == "8"){
-          code = `command == "8"`;
-        }else if(ir_but == "9"){
-          code = `command == "9"`;
-        }else if(ir_but == "0"){
-          code = `command == "0"`;
-        }else if(ir_but == "#"){
-          code = `command == "#"`;
-        }else if(ir_but == "*"){
-          code = `command == "*"`;
-        }else if(ir_but == "Up"){
-          code = `command == "Up"`;
-        }else if(ir_but == "Down"){
-          code = `command == "Down"`;
-        }else if(ir_but == "Left"){
-          code = `command == "Left"`;
-        }else if(ir_but == "Right"){
-          code = `command == "Right"`;
-        }else if(ir_but == "Ok"){
-          code = `command == "Ok"`;
-        }
-        return [code, Blockly.Python.ORDER_NONE];
-      };
-        //IR_END ////////////////////////////////////
-  // Moter 2.0 Start ////////////////////////////////////
-  /*
-    Blockly.Python['motor_control'] = function(block) {
-      Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-    var dropdown_mcontrol = block.getFieldValue('mcontrol');
-    var dropdown_move = block.getFieldValue('move');
-    var dropdown_speed = block.getFieldValue('speed');
-    
-  
-    var code = '';
-    if (dropdown_mcontrol == 'left' && dropdown_move == 'forward') {
-      code = `beetlecar.left_fw(${dropdown_speed})\n`;
-    } else if (dropdown_mcontrol == 'left' && dropdown_move == 'backward') {
-      code = `beetlecar.left_bw(${dropdown_speed})\n`;
-    } else if (dropdown_mcontrol == 'right' && dropdown_move == 'forward') {
-      code = `beetlecar.right_fw(${dropdown_speed})\n`;
-    } else if (dropdown_mcontrol == 'right' && dropdown_move == 'backward') {
-      code = `beetlecar.right_bw(${dropdown_speed})\n`;
-    }
-    return code;
-  };
-  Blockly.Python['motor_control0'] = function(block) {
-    Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-    var dropdown_motor_control0 = block.getFieldValue('motor_control0');
-    var dropdown_speed = block.getFieldValue('speed');
-  
-  
-    var code = '';
-    if (dropdown_motor_control0 == 'forward') {
-      code = `beetlecar.forward(${dropdown_speed})\n`;
-    } else if (dropdown_motor_control0 == 'backward') {
-      code = `beetlecar.backward(${dropdown_speed})\n`;
-    } else if (dropdown_motor_control0 == 'left') {
-      code = `beetlecar.motor_left(${dropdown_speed})\n`;
-    } else if (dropdown_motor_control0 == 'right') {
-      code = `beetlecar.motor_right(${dropdown_speed})\n`;
-    }
-    return code;
-  };
-  */
-  /*
-  Blockly.Python['motor_control1'] = function(block) {
-  Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-    var dropdown_motor_control1 = block.getFieldValue('motor_control1');
-    var dropdown_speed = block.getFieldValue('speed');
-    var time = block.getFieldValue('time');
-   
-  
-    var code = '';
-    if (dropdown_motor_control1 == 'forward') {
-      code = `beetlecar.forward_duration(${dropdown_speed},${time})\n`;
-    } else if (dropdown_motor_control1 == 'backward') {
-      code = `beetlecar.backward_duration(${dropdown_speed},${time})\n`;
-    } else if (dropdown_motor_control1 == 'left') {
-      code = `beetlecar.left_duration(${dropdown_speed},${time})\n`;
-    } else if (dropdown_motor_control1 == 'right') {
-      code = `beetlecar.right_duration(${dropdown_speed},${time})\n`;
-    }
-    return code;
-  };*/
-  /*Blockly.Python['motor_control2'] = function(block) {
-      Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-    
-    var dropdown_motor_control2 = block.getFieldValue('motor_control2');
-    var speed = block.getFieldValue('speed');
-  
-    var code = '';
-    if (dropdown_motor_control2 == 'forward') {
-     code = `beetlecar.forward(${speed})\n`;
-    } else if (dropdown_motor_control2 == 'backward') {
-     code = `beetlecar.backward(${speed})\n`;
-    } else if (dropdown_motor_control2 == 'left') {
-     code = `beetlecar.motor_left(${speed})\n`;
-    } else if (dropdown_motor_control2 == 'right') {
-     code = `beetlecar.motor_right(${speed})\n`;
-    }
-    return code;
-  };
-  */
-  Blockly.Python['new_motor'] = function(block) {
-    
-    Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
-    Blockly.Python.definitions_['import_machine'] = 'import machine';
-    Blockly.Python.definitions_['import_time'] = 'import time';
-    
-  
-      
-    var motorpin = Blockly.Python.provideFunction_(
-      'motorpin',
-      [
-          'RMOTOR1 = Pin(26, Pin.OUT)',
-          'LMOTOR1 = Pin(14, Pin.OUT)',
-          'RMOTOR2 = Pin(25, Pin.OUT)',
-          'LMOTOR2 = Pin(27, Pin.OUT)',
-          'RMOTOR1_PWM = PWM(Pin(26), freq=1000)',
-          'LMOTOR1_PWM = PWM(Pin(14), freq=1000)',
-          'RMOTOR2_PWM = PWM(Pin(25), freq=1000)',
-          'LMOTOR2_PWM = PWM(Pin(27), freq=1000)',
-      ]
-  );
-    var stop = Blockly.Python.provideFunction_(
-        'stop',
-        [
-            'def stop():',
-            '    RMOTOR1.off()',
-            '    RMOTOR1_PWM.duty(int(0))',
-            '    LMOTOR1.off()',
-            '    LMOTOR1_PWM.duty(int(0))',
-            '    RMOTOR2.off()',
-            '    RMOTOR2_PWM.duty(int(0))',
-            '    LMOTOR2.off()',
-            '    LMOTOR2_PWM.duty(int(0))'
-        ]
-    );
-    
-    var backward = Blockly.Python.provideFunction_(
-        'backward',
-        [
-            'def backward(speed):',
-            '    RMOTOR1.off()',
-            '    RMOTOR1_PWM.duty(int(0))',
-            '    LMOTOR1.off()',
-            '    LMOTOR1_PWM.duty(int(0))',
-            '    RMOTOR2.on()',
-            '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-            '    LMOTOR2.on()',
-            '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))'
-        ]
-    );
-    
-    var forward = Blockly.Python.provideFunction_(
-        'forward',
-        [
-            'def forward(speed):',
-            '    RMOTOR1.on()',
-            '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-            '    LMOTOR1.on()',
-            '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-            '    RMOTOR2.off()',
-            '    RMOTOR2_PWM.duty(int(0))',
-            '    LMOTOR2.off()',
-            '    LMOTOR2_PWM.duty(int(0))'
-        ]
-    );
-    
-    var left = Blockly.Python.provideFunction_(
-        'left',
-        [
-            'def left(speed):',
-            '    RMOTOR1.on()',
-            '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-            '    LMOTOR1.off()',
-            '    LMOTOR1_PWM.duty(int(0))',
-            '    RMOTOR2.off()',
-            '    RMOTOR2_PWM.duty(int(0))',
-            '    LMOTOR2.on()',
-            '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))'
-        ]
-    );
-    
-    var right = Blockly.Python.provideFunction_(
-        'right',
-        [
-            'def right(speed):',
-            '    RMOTOR1.off()',
-            '    RMOTOR1_PWM.duty(int(0))',
-            '    LMOTOR1.on()',
-            '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-            '    RMOTOR2.on()',
-            '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-            '    LMOTOR2.off()',
-            '    LMOTOR2_PWM.duty(int(0))'
-        ]
-    );
-    
-  
-    
-    
-    var move = block.getFieldValue('move');
-    var speed = block.getFieldValue('speed');
-  
-    var code = '';
-    if(speed == 0){
-      code = `stop()\n`;
-    }else{
-      if (move == 'forward') {
-        code = 'forward' + '(' + speed + ')\n';
-      }else if (move == 'backward') {
-        code = 'backward' + '(' + speed + ')\n';
-      }else if (move == 'left') {
-        code = 'left' + '(' + speed + ')\n';
-      }else if (move == 'right') {
-        code = 'right' + '(' + speed + ')\n';
-      }
-    } 
-    return code;
-  };
-  Blockly.Python['new_motor2'] = function(block) {
-    Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
-    Blockly.Python.definitions_['import_machine'] = 'import machine';
-    Blockly.Python.definitions_['import_time'] = 'import time';
-    
-  
-    var motorpin = Blockly.Python.provideFunction_(
-      'motorpin',
-      [
-          'RMOTOR1 = Pin(26, Pin.OUT)',
-          'LMOTOR1 = Pin(14, Pin.OUT)',
-          'RMOTOR2 = Pin(25, Pin.OUT)',
-          'LMOTOR2 = Pin(27, Pin.OUT)',
-          'RMOTOR1_PWM = PWM(Pin(26), freq=1000)',
-          'LMOTOR1_PWM = PWM(Pin(14), freq=1000)',
-          'RMOTOR2_PWM = PWM(Pin(25), freq=1000)',
-          'LMOTOR2_PWM = PWM(Pin(27), freq=1000)',
-      ]
-  );
-  var forward_for_sec = Blockly.Python.provideFunction_(
-    'forward_for_sec',
-    [
-        'def forward_for_sec(speed, duration):',
-        '    RMOTOR1.on()',
-        '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-        '    LMOTOR1.on()',
-        '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-        '    RMOTOR2.off()',
-        '    RMOTOR2_PWM.duty(int(0))',
-        '    LMOTOR2.off()',
-        '    LMOTOR2_PWM.duty(int(0))',
-        '    time.sleep(duration)',
-        '    stop()'
-    ]
-  );
-  
-  var backward_for_sec = Blockly.Python.provideFunction_(
-    'backward_for_sec',
-    [
-        'def backward_for_sec(speed, duration):',
-        '    RMOTOR1.off()',
-        '    RMOTOR1_PWM.duty(int(0))',
-        '    LMOTOR1.off()',
-        '    LMOTOR1_PWM.duty(int(0))',
-        '    RMOTOR2.on()',
-        '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-        '    LMOTOR2.on()',
-        '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-        '    time.sleep(duration)',
-        '    stop()'
-    ]
-  );
-  
-  var left_for_sec = Blockly.Python.provideFunction_(
-    'left_for_sec',
-    [
-        'def left_for_sec(speed, duration):',
-        '    RMOTOR1.on()',
-        '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-        '    LMOTOR1.off()',
-        '    LMOTOR1_PWM.duty(int(0))',
-        '    RMOTOR2.off()',
-        '    RMOTOR2_PWM.duty(int(0))',
-        '    LMOTOR2.on()',
-        '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-        '    time.sleep(duration)',
-        '    stop()'
-    ]
-  );
-  
-  var right_for_sec = Blockly.Python.provideFunction_(
-    'right_for_sec',
-    [
-        'def right_for_sec(speed, duration):',
-        '    RMOTOR1.off()',
-        '    RMOTOR1_PWM.duty(int(0))',
-        '    LMOTOR1.on()',
-        '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-        '    RMOTOR2.on()',
-        '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-        '    LMOTOR2.off()',
-        '    LMOTOR2_PWM.duty(int(0))',
-        '    time.sleep(duration)',
-        '    stop()'
-    ]
-  );
-  var stop = Blockly.Python.provideFunction_(
-    'stop',
-    [
-        'def stop():',
-        '    RMOTOR1.off()',
-        '    RMOTOR1_PWM.duty(int(0))',
-        '    LMOTOR1.off()',
-        '    LMOTOR1_PWM.duty(int(0))',
-        '    RMOTOR2.off()',
-        '    RMOTOR2_PWM.duty(int(0))',
-        '    LMOTOR2.off()',
-        '    LMOTOR2_PWM.duty(int(0))'
-    ]
-  );
-  
-    var move = block.getFieldValue('move');
-    var speed = block.getFieldValue('speed');
-    var time = block.getFieldValue('time');
-  
-   
-    var code = '';
-    if(speed == 0){
-      code = `stop()\n`;
-    }else{
-    if (move == 'forward') {
-      
-        
-      code = 'forward_for_sec' + '(' + speed + ', '+ time +')\n';
-    } else if (move == 'backward') {
-      
-        
-      code = 'backward_for_sec' + '(' + speed + ', '+ time +')\n';
-    } else if (move == 'left') {
-      
-        
-      code = 'left_for_sec' + '(' + speed + ', '+ time +')\n';
-    } else if (move == 'right') {
-      
-        
-      code = 'right_for_sec' + '(' + speed + ', '+ time +')\n';
-    } else if(speed == 0){
-      code = `stop\n`
-    } 
-    }
-    return code;
-  };
-  Blockly.Python['newstopMotor'] = function(block) {
-    Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
-    Blockly.Python.definitions_['import_machine'] = 'import machine';
-    Blockly.Python.definitions_['import_time'] = 'import time';
-  
-    var stop = Blockly.Python.provideFunction_(
-      'stop',
-      [
-          'def stop():',
-          '    RMOTOR1.off()',
-          '    RMOTOR1_PWM.duty(int(0))',
-          '    LMOTOR1.off()',
-          '    LMOTOR1_PWM.duty(int(0))',
-          '    RMOTOR2.off()',
-          '    RMOTOR2_PWM.duty(int(0))',
-          '    LMOTOR2.off()',
-          '    LMOTOR2_PWM.duty(int(0))'
-      ]
-  );
-  
-    var code = 'stop()\n';
-    
-    return code;
-    
-  };
-  
-  // Moter 2.0 End //////////////////////////////////// .
-  
-  // LED Start ////////////////////////////////////
-  
-  Blockly.Python['led_left'] = function(block) {
-            
-              Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-            
-                var dropdown_trig = block.getFieldValue('pin_trig');
-                code = '';;
-                if(dropdown_trig == 1){
-                  code = `beetlecar.led_left_on()\n`;
-                }else if(dropdown_trig == 2){
-                  code = `beetlecar.led_left_off()\n`;
-                }
-                return code;
+              var code = `${functionName}(${number_button}) == 0`;
+              return [code, Blockly.Python.ORDER_NONE];
               };
-  Blockly.Python['led_right'] = function(block) {
+              Blockly.Python['switch_toggle_iot'] = function(block) {
+                Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
+                
+               var dropdown_button = block.getFieldValue('pin');
             
-  Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-              
-              var dropdown_trig = block.getFieldValue('pin_trig');
-                  code = '';;
-                  if(dropdown_trig == 3){
-                    code = `beetlecar.led_right_on()\n`;
-                  }else if(dropdown_trig == 4){
-                    code = `beetlecar.led_right_off()\n`;
-                  }
-                  return code;
-                };
-  Blockly.Python['new_motor3'] = function(block) {
-    Blockly.Python.definitions_['from_machine_import_pin_pwm'] = 'from machine import Pin,PWM';
+               code = '';;
+               if(dropdown_button == 18){
+                 code = `beetlecar.toggle_state_a`;
+               }else if(dropdown_button == 5){
+                 code = `beetlecar.toggle_state_b`;
+               }
+                return [code, Blockly.Python.ORDER_NONE];
+              };
+    //buttonset
+    //buzzer
+  
+    Blockly.Python['tone1'] = function(block) {
+      Blockly.Python.definitions_['import_time'] = 'import time';
+      Blockly.Python.definitions_['import_machine'] = 'import machine';
+    
+      var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+      var value_freq = Blockly.Python.valueToCode(block, 'freq', Blockly.Python.ORDER_ATOMIC);
+      var value_time = Blockly.Python.valueToCode(block, 'time', Blockly.Python.ORDER_ATOMIC);
+      var code = `${buzzerWriteFunction()}(${value_pin}, freq=${value_freq}, stop=${value_time})\n`;
+      return code;
+    };
+    
+    Blockly.Python['tone2'] = function(block) {
+      Blockly.Python.definitions_['import_time'] = 'import time';
+      Blockly.Python.definitions_['import_machine'] = 'import machine';
+    
+      var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+      var value_freq = Blockly.Python.valueToCode(block, 'freq', Blockly.Python.ORDER_ATOMIC);
+      var code = `${buzzerWriteFunction()}(${value_pin}, freq=${value_freq})\n`;
+      return code;
+    };
+    
+    Blockly.Python['no_tone'] = function(block) {
+      Blockly.Python.definitions_['import_time'] = 'import time';
+      Blockly.Python.definitions_['import_machine'] = 'import machine';
+    
+      var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+      var code = `${buzzerWriteFunction()}(${value_pin}, duty=0)\n`;
+      return code;
+    };
+    //buzzer
+    //delaysec
+    Blockly.Python['delaysec'] = function(block) {
+      Blockly.Python.definitions_['import_time'] = 'import time';
+      var value_time = Blockly.Python.valueToCode(block, 'time', Blockly.Python.ORDER_ATOMIC);
+      var code = `time.sleep(${value_time})\n`
+      return code;
+    };
+    Blockly.Python['delaymilli'] = function(block) {
+      Blockly.Python.definitions_['import_time'] = 'import time';
+      var value_timems = Blockly.Python.valueToCode(block, 'timems', Blockly.Python.ORDER_ATOMIC);
+      var code = `time.sleep_ms(${value_timems})\n`
+      return code;
+    };
+    //delaysec
+    //dhtrun
+  
+    Blockly.Python['dhtrun'] = function(block)
+  {
     Blockly.Python.definitions_['import_machine'] = 'import machine';
-    Blockly.Python.definitions_['import_time'] = 'import time';
-    
-    var motorpin = Blockly.Python.provideFunction_(
-      'motorpin',
-      [
-          'RMOTOR1 = Pin(26, Pin.OUT)',
-          'LMOTOR1 = Pin(14, Pin.OUT)',
-          'RMOTOR2 = Pin(25, Pin.OUT)',
-          'LMOTOR2 = Pin(27, Pin.OUT)',
-          'RMOTOR1_PWM = PWM(Pin(26), freq=1000)',
-          'LMOTOR1_PWM = PWM(Pin(14), freq=1000)',
-          'RMOTOR2_PWM = PWM(Pin(25), freq=1000)',
-          'LMOTOR2_PWM = PWM(Pin(27), freq=1000)',
-      ]
-  );
-    var backward = Blockly.Python.provideFunction_(
-      'backward',
-      [
-          'def backward(speed):',
-          '    RMOTOR1.off()',
-          '    RMOTOR1_PWM.duty(int(0))',
-          '    LMOTOR1.off()',
-          '    LMOTOR1_PWM.duty(int(0))',
-          '    RMOTOR2.on()',
-          '    RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-          '    LMOTOR2.on()',
-          '    LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))'
-      ]
-  );
-  
-  var forward = Blockly.Python.provideFunction_(
-      'forward',
-      [
-          'def forward(speed):',
-          '    RMOTOR1.on()',
-          '    RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-          '    LMOTOR1.on()',
-          '    LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-          '    RMOTOR2.off()',
-          '    RMOTOR2_PWM.duty(int(0))',
-          '    LMOTOR2.off()',
-          '    LMOTOR2_PWM.duty(int(0))'
-      ]
-  );
-    
-    var right_forward = Blockly.Python.provideFunction_(
-      `right_forward`,
-      ['def right_forward(speed):',
-      '     RMOTOR1.on()',
-      '     RMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-      '     LMOTOR1.off()',
-      '     LMOTOR1_PWM.duty(int(0))',
-      '     RMOTOR2.off()',
-      '     RMOTOR2_PWM.duty(int(0))',
-      '     LMOTOR2.off()',
-      '     LMOTOR2_PWM.duty(int(0))',
-    ]
-      );
-  var right_backward = Blockly.Python.provideFunction_(
-      `right_backward`,
-      ['def right_backward(speed):',
-      '     RMOTOR1.off()',
-      '     RMOTOR1_PWM.duty(int(0))',
-      '     LMOTOR1.off()',
-      '     LMOTOR1_PWM.duty(int(0))',
-      '     RMOTOR2.on()',
-      '     RMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-      '     LMOTOR2.off()',
-      '     LMOTOR2_PWM.duty(int(0))',
-    ]
-      );
-  var left_forward = Blockly.Python.provideFunction_(
-      `left_forward`,
-      ['def left_forward(speed):',
-      '     RMOTOR1.off()',
-      '     RMOTOR1_PWM.duty(int(0))',
-      '     LMOTOR1.on()',
-      '     LMOTOR1_PWM.duty(int((5.25 * speed) + 495 ))',
-      '     RMOTOR2.off()',
-      '     RMOTOR2_PWM.duty(int(0))',
-      '     LMOTOR2.off()',
-      '     LMOTOR2_PWM.duty(int(0))',
-    ]
-      );
-  
-  var left_backward = Blockly.Python.provideFunction_(
-      `left_backward`,
-      ['def left_backward(speed):',
-      '     RMOTOR1.off()',
-      '     RMOTOR1_PWM.duty(int(0))',
-      '     LMOTOR1.off()',
-      '     LMOTOR1_PWM.duty(int(0))',
-      '     RMOTOR2.off()',
-      '     RMOTOR2_PWM.duty(int(0))',
-      '     LMOTOR2.on()',
-      '     LMOTOR2_PWM.duty(int((5.25 * speed) + 495 ))',
-    ]
-      );
-  
-  
-    var motor = block.getFieldValue('motor');
-    var move = block.getFieldValue('move');
-    var speed = block.getFieldValue('speed');
-  
-    var code = ``;
-    if(speed == 0){
-      code = `stop()\n`;
-    }else{
-    if (motor == 'left' && move == 'forward') {
-      code = 'left_forward' + '(' + speed + ')\n';
-  
-    }else if(motor == 'left' && move == 'backward'){
-      code = 'left_backward' + '(' + speed + ')\n';
-      
-    }else if(motor == 'right'&& move == 'forward'){
-      code = 'right_forward' + '(' + speed + ')\n';
-      
-    }else if(motor == 'right'&& move == 'backward'){
-      code = 'right_backward' + '(' + speed + ')\n';
-      
-    }else if(motor == 'all'&& move == 'forward'){
-      code = 'forward' + '(' + speed + ')\n';
-    }else{
-      code = 'backward' + '(' + speed + ')\n';
-    }
-    }
-    return code;
-  };
-  Blockly.Python['ir_sig_new2'] = function(block) {
-    Blockly.Python.definitions_['import_time'] = 'import time';
-    Blockly.Python.definitions_['import_utime'] = 'import utime';
-    Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin,PWM';
-    Blockly.Python.definitions_['ird_pin'] = 'ird = Pin(19,Pin.IN)';
-  
-      
-    var actCodeDefinition =
-    '{'+
-    '"1": "LLLLLLLLHHHHHHHHHLHLLLHLLHLHHHLH",' +
-    '"2": "LLLLLLLLHHHHHHHHLHHLLLHLHLLHHHLH",' +
-    '"3": "LLLLLLLLHHHHHHHHHHHLLLHLLLLHHHLH",' +
-    '"4": "LLLLLLLLHHHHHHHHLLHLLLHLHHLHHHLH",' +
-    '"5": "LLLLLLLLHHHHHHHHLLLLLLHLHHHHHHLH",' +
-    '"6": "LLLLLLLLHHHHHHHHHHLLLLHLLLHHHHLH",' +
-    '"7": "LLLLLLLLHHHHHHHHHHHLLLLLLLLHHHHH",' +
-    '"8": "LLLLLLLLHHHHHHHHHLHLHLLLLHLHLHHH",' +
-    '"9": "LLLLLLLLHHHHHHHHHLLHLLLLLHHLHHHH",' +
-    '"0": "LLLLLLLLHHHHHHHHHLLHHLLLLHHLLHHH",' +
-    '"Up": "LLLLLLLLHHHHHHHHLLLHHLLLHHHLLHHH",' +
-    '"Down": "LLLLLLLLHHHHHHHHLHLLHLHLHLHHLHLH",' +
-    '"Left": "LLLLLLLLHHHHHHHHLLLHLLLLHHHLHHHH",' +
-    '"Right": "LLLLLLLLHHHHHHHHLHLHHLHLHLHLLHLH",' +
-    '"OK": "LLLLLLLLHHHHHHHHLLHHHLLLHHLLLHHH",' +
-    '"*": "LLLLLLLLHHHHHHHHLHHLHLLLHLLHLHHH",' +
-    '"#": "LLLLLLLLHHHHHHHHHLHHLLLLLHLLHHHH"' +
-    '}';
-  
-  // Define a function to get the act_code dictionary
-  var functionName = Blockly.Python.provideFunction_(
-    'act_code',
-    ['act_code ' + '= ' + actCodeDefinition,
-     
-    ]
-  );
-  
-  // Assign the result of calling the get_act_code function to act_code variable
-  
-  
+    Blockly.Python.definitions_['import_dht'] = 'import dht';
     var functionName = Blockly.Python.provideFunction_(
-      'read_ircode(ird)',
-      ['def ' + 'read_ircode(ird)' + ':',
-      '    wait_ir = 1',
-      '    complete_ir = 0',
-      '    seq0_ir = []',
-      '    seq1_ir = []',
-      '',
-      '    while wait_ir == 1:',
-      '        if ird.value() == 0:',
-      '            wait_ir = 0',
-      '    while wait_ir == 0 and complete_ir == 0:',
-      '        start = utime.ticks_us()',
-      '        while ird.value() == 0:',
-      '            ms1 = utime.ticks_us()',
-      '        diff = utime.ticks_diff(ms1,start)',
-      '        seq0_ir.append(diff)',
-      '        while ird.value() == 1 and complete_ir == 0:',
-      '            ms2 = utime.ticks_us()',
-      '            diff = utime.ticks_diff(ms2,ms1)',
-      '            if diff > 10000:',
-      '                complete_ir = 1',
-      '        seq1_ir.append(diff)',
-      '',
-      '    code = ""',
-      '    for val in seq1_ir:',
-      '        if val < 2000:',
-      '            if val < 700:',
-      '                code += "L"',
-      '            else:',
-      '                code += "H"',
-      '    command = ""',
-      '    for k,v in act_code.items():',
-      '        if code == v:',
-      '            command = k',
-      '    if command == "":',
-      '        command = code',
-      '    return command'
-      ]
-  );
+    'dhtrun',
+    ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(pin):',
+    '\tdht_sensor = dht.DHT22(machine.Pin(pin))',
+    '\tdht_sensor.measure()',
+    '\treturn [ dht_sensor.temperature(), dht_sensor.humidity() ]',]);
+  
+    var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+    var dropdown_valueindex = block.getFieldValue('valueIndex');
+    var code = `${functionName}(${value_pin})[${dropdown_valueindex}]`;
+    return [code, Blockly.Python.ORDER_NONE];
+  };
+    //dhtrun
+  //lcdsetting
+    Blockly.Python['lcdsetting'] = function(block) {
+      Blockly.Python.definitions_['import_time'] = 'import time';
+      Blockly.Python.definitions_['import_ili9341'] = 'import ili9341';
+      Blockly.Python.definitions_['import_machine'] = 'import machine';
+      Blockly.Python.definitions_['import_freesan'] = 'import freesan';
+      var value_sck = Blockly.Python.valueToCode(block, 'pinsck', Blockly.Python.ORDER_ATOMIC);
+      var value_mosi = Blockly.Python.valueToCode(block, 'pinmosi', Blockly.Python.ORDER_ATOMIC);
+      var value_dc = Blockly.Python.valueToCode(block, 'pindc', Blockly.Python.ORDER_ATOMIC);
+      var value_cs = Blockly.Python.valueToCode(block, 'pincs', Blockly.Python.ORDER_ATOMIC);
+      var value_rst = Blockly.Python.valueToCode(block, 'pinrst', Blockly.Python.ORDER_ATOMIC);
+      var value_rotation = block.getFieldValue('rotation_index');
+      var code = `spi = machine.SPI(1, baudrate=10000000, sck=machine.Pin(${value_sck}), mosi=machine.Pin(${value_mosi}))\n`;
+      code += `display = ili9341.ILI9341(spi, dc=machine.Pin(${value_dc}), cs=machine.Pin(${value_cs}), rst=machine.Pin(${value_rst}),width=320, height=240, rotation=${value_rotation})\n`;
+      code += `display.set_font(freesan)\n`;
+      return code;
+    };
+    Blockly.Python['lcdshow'] = function(block)
+    {
+      var value_xaxis = Blockly.Python.valueToCode(block, 'xaxis', Blockly.Python.ORDER_ATOMIC);
+      var value_yaxis = Blockly.Python.valueToCode(block, 'yaxis', Blockly.Python.ORDER_ATOMIC);
+      var value_showtext = Blockly.Python.valueToCode(block, 'showtext', Blockly.Python.ORDER_ATOMIC);
+      var code = `display.set_pos(${value_xaxis},${value_yaxis})\n`;
+      code += `display.print(str(${value_showtext}))\n`;
+      return code;
+    };
+    Blockly.Python['lcdclear'] = function(block)
+    {
+      var code = `display.erase()\n`;
+      return code;
+    };
+  //lcdsetting
+  //ldrrun
+  Blockly.Python['ldrrun'] = function(block)
+  {
+    Blockly.Python.definitions_['import_machine'] = 'import machine';
+    var functionName = Blockly.Python.provideFunction_(
+    'ldr',
+    ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(pin):',
+    '\tldr_adc = machine.ADC(machine.Pin(pin))',
+    '\tldr_value = ldr_adc.read()',
+    '\treturn ldr_value',]);
+  
+    var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+    var code = `${functionName}(${value_pin})`;
+    return [code, Blockly.Python.ORDER_NONE];
+  };
+  //ldrrun
+  //ledset
+  Blockly.Python['ledset'] = function(block) {
+      Blockly.Python.definitions_['import_machine'] = 'import machine';
+      var value_pinled = Blockly.Python.valueToCode(block, 'ledpin', Blockly.Python.ORDER_ATOMIC);
+      var dropdown_led = block.getFieldValue('ledindex');
+      var code = `machine.Pin(${value_pinled}, machine.Pin.OUT).value(${dropdown_led})\n`
+      return code;
+    };
+  //ledset
+  //motordcset
+  Blockly.Python['motordcset'] = function(block) {
+      Blockly.Python.definitions_['import_machine'] = 'import machine';
+      var value_pinmotordcplus = Blockly.Python.valueToCode(block, 'motordcpluspin', Blockly.Python.ORDER_ATOMIC);
+      var value_pinmotordcminus = Blockly.Python.valueToCode(block, 'motordcminuspin', Blockly.Python.ORDER_ATOMIC);
+      var code = `motordcplus = machine.PWM(machine.Pin(${value_pinmotordcplus}))\n`
+      code += `motordcminus = machine.PWM(machine.Pin(${value_pinmotordcminus}))\n`
+      return code;
+    };
+    Blockly.Python['motordcrun'] = function(block) {
+      var dropdown_motordcplus = block.getFieldValue('motordcplusindex');
+      var dropdown_motordcminus = block.getFieldValue('motordcminusindex');
+      var code = `motordcplus.duty(${dropdown_motordcplus})\n`
+      code += `motordcminus.duty(${dropdown_motordcminus})\n`
+      return code;
+    };
+  //motordcset
+  /*/neopixel
+  Blockly.Python['neopixel_setup'] = function(block) {
+      var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+      var value_length = Blockly.Python.valueToCode(block, 'length', Blockly.Python.ORDER_ATOMIC) || '0';
+      
+      Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin';
+      Blockly.Python.definitions_['from_neopixel_import_neopixel'] = 'from neopixel import NeoPixel';
     
-  var functionName = Blockly.Python.provideFunction_(
-    'command_reader()',
-    ['def ' + 'command_reader()' + ':',
-    '    return read_ircode(ird)'
-    ]
-  );
-  
-  
-  
-    var code = '#while True:\ncommand = read_ircode(ird)\n'
+      var code = `np = NeoPixel(Pin(${value_pin}, Pin.OUT), ${value_length}); np.bright = 50\n`;
+      return code;
+    };
+    
+    Blockly.Python['neopixel_set_color1'] = function(block) {
+      var value_n = Blockly.Python.valueToCode(block, 'n', Blockly.Python.ORDER_ATOMIC);
+      var colour_color = block.getFieldValue('color');
+    
+      var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(colour_color);
+      var red = parseInt(result[1], 16);
+      var green = parseInt(result[2], 16);
+      var blue = parseInt(result[3], 16);
+    
+      var code = `np[${value_n}] = (int(${red} * np.bright / 100), int(${green} * np.bright / 100), int(${blue} * np.bright / 100))\n`;
+      return code;
+    };
+    
+    Blockly.Python['neopixel_set_color2'] = function(block) {
+      var value_n = Blockly.Python.valueToCode(block, 'n', Blockly.Python.ORDER_ATOMIC);
+      var value_red = Blockly.Python.valueToCode(block, 'red', Blockly.Python.ORDER_ATOMIC);
+      var value_green = Blockly.Python.valueToCode(block, 'green', Blockly.Python.ORDER_ATOMIC);
+      var value_blue = Blockly.Python.valueToCode(block, 'blue', Blockly.Python.ORDER_ATOMIC);
+    
+      var code = `np[${value_n}] = (int(${value_red} * np.bright / 100), int(${value_green} * np.bright / 100), int(${value_blue} * np.bright / 100))\n`;
+      return code;
+    };
+    
+    Blockly.Python['neopixel_fill_color1'] = function(block) {
+      var colour_color = block.getFieldValue('color');
+    
+      var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(colour_color);
+      var red = parseInt(result[1], 16);
+      var green = parseInt(result[2], 16);
+      var blue = parseInt(result[3], 16);
+    
+      var code = `for i in range(np.n): np[i] = (int(${red} * np.bright / 100), int(${green} * np.bright / 100), int(${blue} * np.bright / 100))\n`;
+      return code;
+    };
+    
+    Blockly.Python['neopixel_fill_color2'] = function(block) {
+      var value_red = Blockly.Python.valueToCode(block, 'red', Blockly.Python.ORDER_ATOMIC);
+      var value_green = Blockly.Python.valueToCode(block, 'green', Blockly.Python.ORDER_ATOMIC);
+      var value_blue = Blockly.Python.valueToCode(block, 'blue', Blockly.Python.ORDER_ATOMIC);
+    
+      var code = `for i in range(np.n): np[i] = (int(${value_red} * np.bright / 100), int(${value_green} * np.bright / 100), int(${value_blue} * np.bright / 100))\n`;
+      return code;
+    };
+    
+    Blockly.Python['neopixel_show'] = function(block) {
+      var code = 'np.write()\n';
+      return code;
+    };
+    
+    Blockly.Python['neopixel_clear'] = function(block) {
+      var code = 'for i in range(np.n): np[i] = (0, 0, 0)\n';
+      return code;
+    };
+    
+    Blockly.Python['neopixel_rainbow'] = function(block) {
+      var value_wait = Blockly.Python.valueToCode(block, 'wait', Blockly.Python.ORDER_ATOMIC) || '30';
+    
+      Blockly.Python.definitions_['from_time_import_sleep_ms'] = 'from time import sleep_ms';
+    
+      var functionName = Blockly.Python.provideFunction_(
+        'neopixelRainbow',
+        ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(np, wait):',
+        '  for j in range(256):',
+        '    for i in range(np.n):',
+        '      WheelPos = (i * 1 + j) & 255',
+        '      if WheelPos < 85:',
+        '        np[i] = (int((WheelPos * 3) * np.bright / 100), int((255 - WheelPos * 3) * np.bright / 100), 0)',
+        '      elif WheelPos < 170:',
+        '        WheelPos -= 85',
+        '        np[i] = (int((255 - WheelPos * 3) * np.bright / 100), 0, int((WheelPos * 3) * np.bright / 100))',
+        '      else:',
+        '        WheelPos -= 170',
+        '        np[i] = (0, int((WheelPos * 3) * np.bright / 100), int((255 - WheelPos * 3) * np.bright / 100))',
+        '    np.write()',
+        '    sleep_ms(wait)']);
+    
+      var code = `${functionName}(np, ${value_wait})\n`;
+      return code;
+    };
+    
+    Blockly.Python['neopixel_set_brightness'] = function(block) {
+      var value_brightness = Blockly.Python.valueToCode(block, 'brightness', Blockly.Python.ORDER_ATOMIC);
+      var code = `np.bright = ${value_brightness}\n`;
+      return code;
+    };
+  *///neopixel
+  //pmsetting
+  Blockly.Python['pmsetting'] = function(block)
+  {
+    Blockly.Python.definitions_['import_machine'] = 'import machine';
+    var value_tx = Blockly.Python.valueToCode(block, 'pintx', Blockly.Python.ORDER_ATOMIC);
+    var value_rx = Blockly.Python.valueToCode(block, 'pinrx', Blockly.Python.ORDER_ATOMIC);
+    var code = `uart = machine.UART(1, baudrate=9600,tx=${value_tx},rx=${value_rx})\n`;
+    code += `def pms7003(uart):\n`;
+    code += `\twhile True:\n`;
+    code += `\t\tif uart.any() >= 32:\n`;
+    code += `\t\t\tdata = uart.read(32)\n`;
+    code += `\t\t\tif data[0] == 0x42 and data[1] == 0x4D:\n`;
+    code += `\t\t\t\tpm1 = (data[4] << 8) | data[5]\n`;
+    code += `\t\t\t\tpm2_5 = (data[6] << 8) | data[7]\n`;
+    code += `\t\t\t\tpm10 = (data[8] << 8) | data[9]\n`;
+    code += `\t\t\treturn pm1, pm2_5, pm10\n`;  
     return code;
   };
-  Blockly.Python['ir_comman_if'] = function(block) {
-    //Blockly.Python.definitions_['from_beetlecar_ir_readircode_ird'] = 'from beetlecar_ir import read_ircode , ird';
+  Blockly.Python['pmgetting'] = function(block)
+  {
+    var code = `pm1, pm2_5, pm10 = pms7003(uart)\n`;
+    return code;
+  };
+  Blockly.Python['pmrunning'] = function(block)
+  {
+    var value_pm = block.getFieldValue('pm_index');
+    var code = `${value_pm}`;
+    return [code, Blockly.Python.ORDER_NONE];
+  };
+  //pmsetting
+  //proximityrun
+  Blockly.Python['proximityrun'] = function(block)
+  {
+    Blockly.Python.definitions_['import_machine'] = 'import machine';
+    var functionName = Blockly.Python.provideFunction_(
+    'proximityrun',
+    ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(pin):',
+    '\tproximity_sensor = machine.Pin(pin,machine.Pin.IN)',
+    '\tproximity_value = proximity_sensor.value()',
+    '\treturn proximity_value',]);
   
-        
-        
-      var ir_but = block.getFieldValue('ir_but');
-      
-      code = '';;
-      if(ir_but == "1"){
-        code = `command == "1"`;
-      }else if(ir_but == "2"){
-        code = `command == "2"`;
-      }else if(ir_but == "3"){
-        code = `command == "3"`;
-      }else if(ir_but == "4"){
-        code = `command == "4"`;
-      }else if(ir_but == "5"){
-        code = `command == "5"`;
-      }else if(ir_but == "6"){
-        code = `command == "6"`;
-      }else if(ir_but == "7"){
-        code = `command == "7"`;
-      }else if(ir_but == "8"){
-        code = `command == "8"`;
-      }else if(ir_but == "9"){
-        code = `command == "9"`;
-      }else if(ir_but == "0"){
-        code = `command == "0"`;
-      }else if(ir_but == "#"){
-        code = `command == "#"`;
-      }else if(ir_but == "*"){
-        code = `command == "*"`;
-      }else if(ir_but == "Up"){
-        code = `command == "Up"`;
-      }else if(ir_but == "Down"){
-        code = `command == "Down"`;
-      }else if(ir_but == "Left"){
-        code = `command == "Left"`;
-      }else if(ir_but == "Right"){
-        code = `command == "Right"`;
-      }else if(ir_but == "OK"){
-        code = `command == "OK"`;
-      }
+    var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+    var code = `${functionName}(${value_pin})`;
+    return [code, Blockly.Python.ORDER_NONE];
+  };
+  //proximityrun
+  //relayset
+  Blockly.Python['relayset'] = function(block) {
+      Blockly.Python.definitions_['import_machine'] = 'import machine';
+      var value_pinrelay = Blockly.Python.valueToCode(block, 'relaypin', Blockly.Python.ORDER_ATOMIC);
+      var dropdown_relay = block.getFieldValue('relayindex');
+      var code = `machine.Pin(${value_pinrelay}, machine.Pin.OUT).value(${dropdown_relay})\n`
+      return code;
+    };
+  //relayset
+  //rfidset
+  Blockly.Python['rfidset'] = function(block)
+  {
+    Blockly.Python.definitions_['from_rfid_import_mfrc522'] = 'from rfid import mfrc522';
+    var value_pinscl = Blockly.Python.valueToCode(block, 'pinscl', Blockly.Python.ORDER_ATOMIC);
+    var value_pinsda = Blockly.Python.valueToCode(block, 'pinsda', Blockly.Python.ORDER_ATOMIC);
+    var code = `rc522 = mfrc522(${value_pinscl},${value_pinsda},0x28)\n`
+    code += `rc522.PCD_Init()\n`
+    code += `data = 0\n`
+    return code
+  };
+  Blockly.Python['rfidget'] = function(block)
+  {
+    var code = `if rc522.PICC_IsNewCardPresent():\n`
+    code += `\tif rc522.PICC_ReadCardSerial() == True:\n`
+    code += `\t\tfor i in rc522.uid.uidByte[0 : rc522.uid.size]:\n`,
+    code += `\t\t\tdata = data + i\n`
+    return code
+  };
+  Blockly.Python['rfidrun'] = function(block)
+  {
+    var code = `data`
+    return [code, Blockly.Python.ORDER_NONE];
+  };
+  Blockly.Python['rfidreset'] = function(block)
+  {
+    var code = `data = 0\n`
+    return code
+  };
+  //rfidset
+  //rotaryset
+  Blockly.Python['rotaryset'] = function(block) {
+      Blockly.Python.definitions_['import_rotary'] = 'import rotary';
+      Blockly.Python.definitions_['import_machine'] = 'import machine';
+      var value_clk = Blockly.Python.valueToCode(block, 'pinclk', Blockly.Python.ORDER_ATOMIC);
+      var value_dt = Blockly.Python.valueToCode(block, 'pindt', Blockly.Python.ORDER_ATOMIC);
+      var code = `rotary = rotary.RotaryIRQ(pin_num_clk=${value_clk},pin_num_dt=${value_dt},min_val=0,max_val=5,reverse=True,range_mode=rotary.RotaryIRQ.RANGE_WRAP)\n`
+      return code;
+    };
+    Blockly.Python['rotaryget'] = function(block) {
+      var code = `rotary_value = rotary.value()\n`
+      return code;
+    };
+    Blockly.Python['rotaryrun'] = function(block) {
+      var code = `rotary_value`;
       return [code, Blockly.Python.ORDER_NONE];
     };
+  //rotaryset
+  //servoeasy
+  Blockly.Python['servoeasy'] = function(block) {
+      Blockly.Python.definitions_['import_machine'] = 'import machine';
+      var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+      var dropdown_servo = block.getFieldValue('servoindex');
+      var code = `machine.PWM(machine.Pin(${value_pin}), freq=50).duty(int(25.57 + (((${dropdown_servo}) / 180.0) * 102.3)))\n`;
+      
+      return code;
+    };
+    Blockly.Python['servohard'] = function(block) {
+      Blockly.Python.definitions_['import_machine'] = 'import machine';
+      var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+      var value_angle = Blockly.Python.valueToCode(block, 'angle', Blockly.Python.ORDER_ATOMIC);
+      var code = `machine.PWM(machine.Pin(${value_pin}), freq=50).duty(int(25.57 + (((${value_angle}) / 180.0) * 102.3)))\n`;
+      return code;
+    };
+  //servoeasy
+  //stepsetting
+  Blockly.Python['stepsetting'] = function(block) {
+      Blockly.Python.definitions_['import_time'] = 'import time';
+      Blockly.Python.definitions_['import_machine'] = 'import machine';
+      var value_dir = Blockly.Python.valueToCode(block, 'pindir', Blockly.Python.ORDER_ATOMIC);
+      var value_step = Blockly.Python.valueToCode(block, 'pinstep', Blockly.Python.ORDER_ATOMIC);
+      var code = `dir_pin = machine.Pin(${value_dir},machine.Pin.OUT)\n`;
+      code += `step_pin = machine.Pin(${value_step},machine.Pin.OUT)\n`;
+      code += `def move_stepper(direct,steps, delay, accel):\n`;
+      code += `\tdir_pin.value(direct)\n`;
+      code += `\tsteps = abs(steps)\n`;
+      code += `\tfor i in range(steps):\n`;
+      code += `\t\tstep_pin.value(1)\n`;
+      code += `\t\ttime.sleep_us(delay)\n`;
+      code += `\t\tstep_pin.value(0)\n`;
+      code += `\t\ttime.sleep_us(delay)\n`;
+      code += `def stop_stepper():\n`;
+      code += `\tstep_pin.value(0)\n`;
+      return code;
+    };
+    Blockly.Python['stepdrive'] = function(block)
+    {
+      var value_dirindex = block.getFieldValue('step_index');
+      var value_stepnum = Blockly.Python.valueToCode(block, 'step', Blockly.Python.ORDER_ATOMIC);
+      var value_delay = Blockly.Python.valueToCode(block, 'delay', Blockly.Python.ORDER_ATOMIC);
+      var value_accel = Blockly.Python.valueToCode(block, 'accel', Blockly.Python.ORDER_ATOMIC);
+      var code = `move_stepper(${value_dirindex},${value_stepnum},${value_delay},${value_accel})\n`;
+      return code;
+    };
+    Blockly.Python['stepstop'] = function(block)
+    {
+      var code = `stop_stepper()\n`;
+      return code;
+    };
+  //stepsetting
+  //thingsboard_setting
+  Blockly.Python['thingsboard_setting'] = function(block) {
+      var value_token = Blockly.Python.valueToCode(block, 'token', Blockly.Python.ORDER_ATOMIC);
+      Blockly.Python.definitions_['import_thingsboard'] = 'import thingsboard';
+      var code = `client = thingsboard.TBDeviceMqttClient('iot1.wsa.cloud', access_token=${value_token})\n`;
+      return code;
+    };
+  Blockly.Python['thingsboard_connect'] = function(block) {
+    var code = `client.connect()\n`;
+    return code;
+  };
+  Blockly.Python['thingsboard_sender'] = function(block) {
+    var value_widget = Blockly.Python.valueToCode(block, 'widget', Blockly.Python.ORDER_ATOMIC);
+    var value_sender = Blockly.Python.valueToCode(block, 'value', Blockly.Python.ORDER_ATOMIC);
+    var code = `sendvalue = {${value_widget}:${value_sender}}\n`;
+    code += `client.publish_data("v1/devices/me/telemetry",sendvalue)\n`;
+    return code;
+  };
+  //thingsboard_setting
+  //wifi_setting
+  Blockly.Python['wifi_setting'] = function(block) {
+      var value_ssid = Blockly.Python.valueToCode(block, 'ssid', Blockly.Python.ORDER_ATOMIC);
+      var value_pass = Blockly.Python.valueToCode(block, 'pass', Blockly.Python.ORDER_ATOMIC) || 'None';
+      Blockly.Python.definitions_['import_network'] = 'import network';
+      var code = `wlan = network.WLAN(network.STA_IF); wlan.active(True); wlan.connect(${value_ssid}, ${value_pass})\n`;
+      return code;
+    };
+    Blockly.Python['wifi_waiting'] = function(block) {
+      var code = `while not wlan.isconnected() : pass\n`;
+      return code;
+    };
+    Blockly.Python['wifi_connect'] = function(block) {
+      var code = 'wlan.isconnected()';
+      return [code, Blockly.Python.ORDER_NONE];
+    };
+    //wifi_setting
+    //read poten
+    
+  Blockly.Python['read_poten'] = function (block) {
+    Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin';
+    Blockly.Python.definitions_['from_machine_import_adc'] = 'from machine import ADC';
   
-  Blockly.Python['ir_read'] = function(block) {
-    //Blockly.Python.definitions_['from_beetlecar_ir_readircode_ird'] = 'from beetlecar_ir import read_ircode , ird';
+    var function_adcRead = Blockly.Python.provideFunction_(
+        'adcRead',
+        ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(analog_pin):',
+        '  adc = ADC(Pin(analog_pin))',
+        '  adc.atten(ADC.ATTN_11DB)',
+        '  adc.width(ADC.WIDTH_12BIT)',
+        '  return adc.read()']);
   
-    code = 'command';
+    var dropdown_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+  
+    var code = `${function_adcRead}(${dropdown_pin})`;
     return [code, Blockly.Python.ORDER_NONE];
-  },
-    //LOOP ZONE
+  };
+  Blockly.Python['poten_ifelse'] = function(block) {
+    Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin';
+    Blockly.Python.definitions_['from_machine_import_adc'] = 'from machine import ADC';
   
-    Blockly.Python['controls_every'] = function(block) {
-      Blockly.Python.definitions_['import_time'] = 'import time';
-      Blockly.Python.definitions_['time.ticks'] = 'start_time = time.ticks_ms()';
+    
   
-      
-      if (block.getField('TIMES')) {
-          // Internal number.
-          var repeats = String(parseInt(block.getFieldValue('TIMES'), 10));
-        } else {
-          // External number.
-          var repeats = Blockly.Python.valueToCode(block, 'TIMES',
-              Blockly.Python.ORDER_NONE) || '0';
-        }
-        if (Blockly.isNumber(repeats)) {
-          repeats = parseInt(repeats, 10);
-        } else {
-          repeats = 'int(' + repeats + ')';
-        }
-      var branch = Blockly.Python.statementToCode(block, 'DO');
-      branch = Blockly.Python.addLoopTrap(branch, block) || Blockly.Python.PASS;
-      var loopVar = Blockly.Python.variableDB_.getDistinctName(
-          'count', Blockly.VARIABLE_CATEGORY_NAME);
+    var branch = Blockly.Python.statementToCode(block, 'DO');
+    branch = Blockly.Python.addLoopTrap(branch, block) || Blockly.Python.PASS;
+    var loopVar = Blockly.Python.variableDB_.getDistinctName(
+        'count', Blockly.VARIABLE_CATEGORY_NAME);
   
-      
+    var value_number = Blockly.Python.valueToCode(block, 'value', Blockly.Python.ORDER_ATOMIC);
+    var math_choice = block.getFieldValue('same');
+    
   
-      var code = `if time.ticks_ms() - start_time >= ${repeats}: \n`;
-          code += `  start_time = time.ticks_ms()\n`
-          code += `${branch}`
-      return code;
-    };
-    
-     //MATH ZONE
-     
-    Blockly.Python['abs_of'] = function(block) {
-      // Random integer between [X] and [Y].
-      var argument0 = Blockly.Python.valueToCode(block, 'FROM',
-          Blockly.Python.ORDER_NONE);
-      
-      var code = 'abs(' + argument0 + ')';
-      return [code, Blockly.Python.ORDER_FUNCTION_CALL];
-    };
-    Blockly.Python['controls_every'] = function(block) {
-      Blockly.Python.definitions_['import_time'] = 'import time';
-      Blockly.Python.definitions_['time.ticks'] = 'start_time = time.ticks_ms()';
-    
-      
-      if (block.getField('TIMES')) {
-          // Internal number.
-          var repeats = String(parseInt(block.getFieldValue('TIMES'), 10));
-        } else {
-          // External number.
-          var repeats = Blockly.Python.valueToCode(block, 'TIMES',
-              Blockly.Python.ORDER_NONE) || '0';
-        }
-        if (Blockly.isNumber(repeats)) {
-          repeats = parseInt(repeats, 10);
-        } else {
-          repeats = 'int(' + repeats + ')';
-        }
-      var branch = Blockly.Python.statementToCode(block, 'DO');
-      branch = Blockly.Python.addLoopTrap(branch, block) || Blockly.Python.PASS;
-      var loopVar = Blockly.Python.variableDB_.getDistinctName(
-          'count', Blockly.VARIABLE_CATEGORY_NAME);
-    
-      
-    
-      var code = `if time.ticks_ms() - start_time >= ${repeats}: \n`;
-          code += `  start_time = time.ticks_ms()\n`
-          code += `${branch}`
-      return code;
-    };
-    Blockly.Python['bool_tf'] = function(block) {
-      // Negation.
-      var code = 'True'
-      return [code, Blockly.Python.ORDER_LOGICAL_NOT];
-    };
-    Blockly.Python['bool_false'] = function(block) {
-      // Negation.
-      var code = 'False'
-      return [code, Blockly.Python.ORDER_LOGICAL_NOT];
-    };
-    Blockly.Python['break_code'] = function(block) {
+    var code = `if adcRead(34) ${math_choice} ${value_number}:\n`;
+        code += `${branch}`
+    return code;
+  };
+  Blockly.Python['if_poten'] = function (block) {
+    Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin';
+    Blockly.Python.definitions_['from_machine_import_adc'] = 'from machine import ADC';
   
-  
-      //var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
-      var code = `break\n`;
-      return code;
-      };
-      Blockly.Python['line_sensor'] = function(block) {
-  
-   
-        Blockly.Python.definitions_['from_machine_import_pin_pwm_adc'] = 'from machine import Pin,PWM,ADC';
-    
-        var dropdown_pin = block.getFieldValue('pin_sen');
-        
-      
-        var functionName = Blockly.Python.provideFunction_(
-            'adcRead',
-            [
-                'def adcRead(analog_pin):',
-                '    adc = ADC(Pin(analog_pin))',
-                '    adc.atten(ADC.ATTN_11DB)',
-                '    adc.width(ADC.WIDTH_12BIT)',
-                '    return adc.read()',
-            ]
-        );
-        
-        var code = `adcRead(${dropdown_pin})`;
-        return [code, Blockly.Python.ORDER_NONE];
-    };
-    // ------------------------------------------------------------------------------------------------------
-    Blockly.Python['set_ssr_ssl'] = function(block) {
-      
-        var sensorlr = block.getFieldValue('ssr_ssl');
-        var number_sensor = block.getFieldValue('pin');
-        
-        code = '';;
-        if(sensorlr == "ssr"){
-          code = `ssr = ${number_sensor}\n`;
-        }else if(sensorlr == "ssl"){
-          code = `ssl = ${number_sensor}\n`;
-        }
-        return code;
-        
-    };
-    // ------------------------------------------------------------------------------------------------------
-    
-    
-    // ------------------------------------------------------------------------------------------------------
-    
-    Blockly.Python['line_sensor_if3'] = function(block) {
-      
-      Blockly.Python.definitions_['from_machine_import_pin_pwm_adc'] = 'from machine import Pin,PWM,ADC';
-    
-      
-      var functionName = Blockly.Python.provideFunction_(
+    var function_adcRead = Blockly.Python.provideFunction_(
         'adcRead',
-        [
-            'def adcRead(analog_pin):',
-            '    adc = ADC(Pin(analog_pin))',
-            '    adc.atten(ADC.ATTN_11DB)',
-            '    adc.width(ADC.WIDTH_12BIT)',
-            '    return adc.read()',
-        ]
-    );
-        
-        var sensorpin = block.getFieldValue('pin_sen');
-        var bw = block.getFieldValue('math');
-                    
-        code = '';;
-        if(sensorpin == 35 && bw == 1){
-            code = `adcRead(35) < ssl`;
-          }else if(sensorpin == 35 && bw == 2){
-            code = `adcRead(35) > ssl`;
-          }else if(sensorpin == 34 && bw == 1){
-            code = `adcRead(34) < ssr`;
-          }else if(sensorpin == 34 && bw == 2){
-            code = `adcRead(34) > ssr`;
-          }else{
-            code = `404`;
-          }
-        
-          return [code, Blockly.Python.ORDER_NONE];
-    };
+        ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(analog_pin):',
+        '  adc = ADC(Pin(analog_pin))',
+        '  adc.atten(ADC.ATTN_11DB)',
+        '  adc.width(ADC.WIDTH_12BIT)',
+        '  return adc.read()']);
+  
+    var value_number = Blockly.Python.valueToCode(block, 'value', Blockly.Python.ORDER_ATOMIC);
+    var math_choice = block.getFieldValue('same');
     
-    // ------------------------------------------------------------------------------------------------------
-    Blockly.Python['read_ssl_ssr'] = function(block) {
-      Blockly.Python.definitions_['from_machine_import_pin_pwm_adc'] = 'from machine import Pin,PWM,ADC';
+    var code = `adcRead(34) ${math_choice} ${value_number}`;
+    return [code, Blockly.Python.ORDER_NONE];
+  };
+  Blockly.Python['poten_ifelse2'] = function(block) {
+    Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin';
+    Blockly.Python.definitions_['from_machine_import_adc'] = 'from machine import ADC';
+  
     
-      
-      var functionName = Blockly.Python.provideFunction_(
-        'adcRead',
-        [
-            'def adcRead(analog_pin):',
-            '    adc = ADC(Pin(analog_pin))',
-            '    adc.atten(ADC.ATTN_11DB)',
-            '    adc.width(ADC.WIDTH_12BIT)',
-            '    return adc.read()',
-        ]
-    );
-        
+    var branch = Blockly.Python.statementToCode(block, 'DO');
+    // branch = Blockly.Python.addLoopTrap(branch, block) || Blockly.Python.PASS;
+    var value_number = Blockly.Python.valueToCode(block, 'value', Blockly.Python.ORDER_ATOMIC);
+    var math_choice = block.getFieldValue('same');
     
-      var sensorlrread = block.getFieldValue('ssr_ssl');
-     
-    
-      code = '';;
-      if(sensorlrread == "ssr"){
-        code = `print((adcRead(34)))\n`;
-      }else if(sensorlrread == "ssl"){
-        code = `print((adcRead(35)))\n`;
-      }
-      return code;
-      
-    };
-    // ------------------------------------------------------------------------------------------------------
+  
+    var code = `if adcRead(34) ${math_choice} ${value_number}: \n`;
+        code += `${branch}`
+    return code;
+  };
+  Blockly.Python['controls_every'] = function(block) {
+    Blockly.Python.definitions_['import_time'] = 'import time';
+    Blockly.Python.definitions_['time.ticks'] = 'start_time = time.ticks_ms()';
 
-    Blockly.Python['on_start'] = function(block) {
-      // Disable automatic indentation
-      Blockly.Python.INDENT = '';
+    
+    if (block.getField('TIMES')) {
+        // Internal number.
+        var repeats = String(parseInt(block.getFieldValue('TIMES'), 10));
+      } else {
+        // External number.
+        var repeats = Blockly.Python.valueToCode(block, 'TIMES',
+            Blockly.Python.ORDER_NONE) || '0';
+      }
+      if (Blockly.isNumber(repeats)) {
+        repeats = parseInt(repeats, 10);
+      } else {
+        repeats = 'int(' + repeats + ')';
+      }
+    var branch = Blockly.Python.statementToCode(block, 'DO');
+    branch = Blockly.Python.addLoopTrap(branch, block) || Blockly.Python.PASS;
+    var loopVar = Blockly.Python.variableDB_.getDistinctName(
+        'count', Blockly.VARIABLE_CATEGORY_NAME);
+
+    
+
+    var code = `if time.ticks_ms() - start_time >= ${repeats}: \n`;
+        code += `  start_time = time.ticks_ms()\n`
+        code += `${branch}`
+    return code;
+  };
+  Blockly.Python['bool_tf'] = function(block) {
+    // Negation.
+    var code = 'True'
+    return [code, Blockly.Python.ORDER_LOGICAL_NOT];
+  };
+  Blockly.Python['bool_false'] = function(block) {
+    // Negation.
+    var code = 'False'
+    return [code, Blockly.Python.ORDER_LOGICAL_NOT];
+  };
+  Blockly.Python['break_code'] = function(block) {
   
+  
+    //var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+    var code = `break\n`;
+    return code;
+    };
+    Blockly.Python['on_start'] = function(block) {
       var branch = Blockly.Python.statementToCode(block, 'DO');
       // branch = Blockly.Python.addLoopTrap(branch, block) || Blockly.Python.PASS;
   
@@ -1294,201 +616,433 @@
       }
   
       var code = branch;
-      
-      // Revert to default indentation
-      Blockly.Python.INDENT = '  ';
-  
       return code;
   };
-  Blockly.Python['switch_is_press_beetle'] = function (block) {
-    Blockly.Python.definitions_['import_switch'] = 'import switch';
-
-    var dropdown_n = block.getFieldValue('n');
-
-    var code = `switch.value(switch.${dropdown_n}) == 1`;
-    return [code, Blockly.Python.ORDER_NONE];
-};
-
-Blockly.Python['switch_is_release_beetle'] = function (block) {
-    Blockly.Python.definitions_['import_switch'] = 'import switch';
-
-    var dropdown_n = block.getFieldValue('n');
-
-    var code = `switch.value(switch.${dropdown_n}) == 0`;
-    return [code, Blockly.Python.ORDER_NONE];
-};
-
-
-Blockly.Python['switch_get_value_beetle'] = function (block) {
-    Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-
-    var dropdown_n = block.getFieldValue('n');
-
-    var code = ``;;
-    if (dropdown_n == 'a'){
-        code = `beetlecar.button_a.value()`;
-    }else if(dropdown_n == 'b'){
-        code = `beetlecar.button_b.value()`;
-    }else{
-        code = `404`
-    }
-    return [code, Blockly.Python.ORDER_NONE];
-};
-// --------------------------------------------------------------------------------------------
-Blockly.Python['switch_on_press_beetle'] = function(block) {
-    Blockly.Python.definitions_['import_time'] = 'import time';
-    Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
-    Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin,PWM';
-
-    var dropdown_pin = block.getFieldValue('pin');
-    var statements_callback = Blockly.Python.statementToCode(block, 'callback');
-
-    // -----------------------------
-    var globals = [];
-    var varName;
-    var workspace = block.workspace;
-    var variables = Blockly.Variables.allUsedVarModels(workspace) || [];
-    for (var i = 0, variable; variable = variables[i]; i++) {
-      varName = variable.name;
-      if (block.getVars().indexOf(varName) == -1) {
-        globals.push(Blockly.Python.variableDB_.getName(varName,
-            Blockly.VARIABLE_CATEGORY_NAME));
-      }
-    }
-    // Add developer variables.
-    var devVarList = Blockly.Variables.allDeveloperVariables(workspace);
-    for (var i = 0; i < devVarList.length; i++) {
-      globals.push(Blockly.Python.variableDB_.getName(devVarList[i],
-          Blockly.Names.DEVELOPER_VARIABLE_TYPE));
-    }
+          // buzzer Start ///////////////////////////////
+          Blockly.Python['buzzer1'] = function(block) {
+            Blockly.Python.definitions_['from_machine_import_pin_pwm_adc'] = 'from machine import Pin,PWM,ADC';
+            Blockly.Python.definitions_['from_time_import_sleep'] = 'from time import sleep';
   
-    globals = globals.length ?
-        Blockly.Python.INDENT + 'global ' + globals.join(', ') + '\n' : '';
-    // -------------------------------------------
-
-    var functionName = Blockly.Python.provideFunction_(
-        'sw_a_put()',
-        ['def ' + 'sw_a_put' + '(_=None):',
-        `   if Pin(18, Pin.IN, Pin.PULL_UP).value() == 1:`,
-        `    task()`,
-        `    time.sleep(1)`,
-        
-        ]
+      
+          var value_freq = Blockly.Python.valueToCode(block, 'freq', Blockly.Python.ORDER_ATOMIC);
+          var value_time = Blockly.Python.valueToCode(block, 'time', Blockly.Python.ORDER_ATOMIC);
+  
+          var functionName = Blockly.Python.provideFunction_(
+            'buzzerWrite',
+            [`def ` + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + `(pin, freq=1000, duty=50, stop=0):`,
+            `    pwm = PWM(Pin(pin))`,
+            `    pwm.freq(freq)`,
+            `    pwm.duty(int(duty / 100 * 1023))`,
+            `    if stop > 0:`,
+            `        sleep(stop)`,
+            `        pwm.duty(0)`]
         );
-
-        var functionName = Blockly.Python.provideFunction_(
-            'sw_b_put()',
-            ['def ' + 'sw_b_put' + '(_=None):',
-            `   if Pin(5, Pin.IN, Pin.PULL_UP).value() == 1:`,
-            `    task()`,
-            `    time.sleep(1)`,
+        
+          var code = `buzzerWrite(buzzer_pin, freq=${value_freq}, stop=${value_time})\n`;
+          return code;
+          };
+          Blockly.Python['buzzer2'] = function(block) {
             
-            ]
+            Blockly.Python.definitions_['from_machine_import_pin_pwm_adc'] = 'from machine import Pin,PWM,ADC';
+            Blockly.Python.definitions_['from_time_import_sleep'] = 'from time import sleep';
+            var functionName = Blockly.Python.provideFunction_(
+              'buzzerWrite',
+              [`def ` + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + `(pin, freq=1000, duty=50, stop=0):`,
+              `    pwm = PWM(Pin(pin))`,
+              `    pwm.freq(freq)`,
+              `    pwm.duty(int(duty / 100 * 1023))`,
+              `    if stop > 0:`,
+              `        sleep(stop)`,
+              `        pwm.duty(0)`]
+          );
+          var value_freq = Blockly.Python.valueToCode(block, 'freq', Blockly.Python.ORDER_ATOMIC);
+          var code = `buzzerWrite(buzzer_pin, freq=${value_freq})\n`;
+          return code;
+          };
+          Blockly.Python['buzzer3'] = function(block) {
+            
+            Blockly.Python.definitions_['from_machine_import_pin_pwm_adc'] = 'from machine import Pin,PWM,ADC';
+            Blockly.Python.definitions_['from_time_import_sleep'] = 'from time import sleep';
+  
+            var functionName = Blockly.Python.provideFunction_(
+              'buzzerWrite',
+              [`def ` + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + `(pin, freq=1000, duty=50, stop=0):`,
+              `    pwm = PWM(Pin(pin))`,
+              `    pwm.freq(freq)`,
+              `    pwm.duty(int(duty / 100 * 1023))`,
+              `    if stop > 0:`,
+              `        sleep(stop)`,
+              `        pwm.duty(0)`]
+          );
+          var code = `buzzerWrite(buzzer_pin, duty=0)\n`;
+          return code;
+          };
+            
+          Blockly.Python['buz_play_music'] = function(block) {
+            Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin,PWM';
+            Blockly.Python.definitions_['from_time_import_sleep'] = 'from time import sleep';
+          
+              //Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
+          
+                var select_song = block.getFieldValue('music');
+    
+                var functionName = Blockly.Python.provideFunction_(
+                  'scale',
+                  ['scale5 = [261,277,293,311,329,349,369,392,415,440,466,493,0 ,523 , 554 , 587 ,622 , 659 , 698 ,739 , 783 , 830 , 880 , 932 , 987 , 1046 ]',
+                   'happy_birthday = [0 , 0 , 2 , 0 ,5 ,4 ,12, 0 ,0 , 2 ,0 ,7 ,5 ,12,0 ,0 ,13 , 9 , 5,4 ,2, 12 , 9 , 9 , 9, 5 , 7 ,5]',
+                   'jingle_bell = [4,4,4,12,4,4,4,12,4,7,0,2,4,12,5,5,5,12,5,4,4,4,4,2,2,4,2,12,7]',
+                   'mary_little_lamb = [4,2,0,2,4,4,4,12,2,2,2,12,4,7,7,12,4,2,0,2,4,4,4,12,0,2,2,4,2,0]',
+                   'badboy = [3,5,7,12,7,3,3,12,3,5,7,5,5,7,3,12,3,5,7,12,7,3,3,12,3,5,7,5,5,7,3,12]',
+                   'harry_potter =[11,17,20,19,17,12,24,22,12,19,12,17,20,19,15,12,18,11]',
+                  ]
+                );
+    
+                
+              var functionName = Blockly.Python.provideFunction_(
+                'buzzerWrite()',
+                ['def ' + 'buzzerWrite(pin, freq=1000, duty=50, stop=0)' + ':',
+                 '    pwm = PWM(Pin(pin))',
+                 '    pwm.freq(freq)',
+                 '    pwm.duty(int(duty / 100 * 1023))',
+                 '    if stop > 0:',
+                 '      sleep(stop)',
+                 '      pwm.duty(0)',
+                ]
+              );
+                code = '';;
+                if(select_song == 1){
+                  code = `for i in happy_birthday:\n    buzzerWrite(buzzer_pin, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
+                }else if(select_song == 3){
+                  code = `for i in jingle_bell:\n    buzzerWrite(buzzer_pin, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
+                }else if(select_song == 4){
+                  code = `for i in mary_little_lamb:\n    buzzerWrite(buzzer_pin, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
+                }else if(select_song == 5){
+                  code = `for i in badboy:\n    buzzerWrite(buzzer_pin, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
+                }else if(select_song == 7){
+                  code = `for i in harry_potter:\n    buzzerWrite(buzzer_pin, freq=scale5[i], stop=0.3)\n    sleep(0.1)\n`;
+                }
+                return code;
+              };
+      
+            // buzzer End /////////////////////////////////
+  
+            Blockly.Python['buzzer_set_pin'] = function(block) {
+              
+            
+             
+              var buzzer_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+              
+            
+              var code = `buzzer_pin = ${buzzer_pin}\n`;
+              return code;
+            };
+
+            Blockly.Python['set_neopi'] = function(block) {
+              Blockly.Python.definitions_['from_machine_pin'] = 'from machine import Pin';
+              Blockly.Python.definitions_['import_neopixel_neo'] = 'from neopixel import NeoPixel';
+            
+              var neoon = Blockly.Python.provideFunction_(
+                'neo_on',
+                [`def ` + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + `():`,
+                `    return np.write()`]
             );
+            
+             
+              var neo_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+              var neo_lenght = Blockly.Python.valueToCode(block, 'lenght', Blockly.Python.ORDER_ATOMIC);
+            
+              var code = `np = NeoPixel(Pin(${neo_pin}, Pin.OUT), ${neo_lenght})\n`;
+              return code;
+            };
+            Blockly.Python['neopixel_fill_color1_neo'] = function(block) {
+              //Blockly.Python.definitions_['from_machine_pin'] = 'from machine import Pin';
+                //Blockly.Python.definitions_['import_neopixel_neo'] = 'from neopixel import NeoPixel';
+              
+                /*Blockly.Python.definitions_['LED_PIN'] = 'LED_PIN = 4';
+                Blockly.Python.definitions_['LED_COUNT'] = 'LED_COUNT = 2';   
+                
+                Blockly.Python.definitions_['np_neo'] = 'np = NeoPixel(Pin(LED_PIN, Pin.OUT), LED_COUNT)'; */
+              //Blockly.Python.definitions_['import_beetlecar'] = 'import beetlecar';
+                
+                var colour_color = block.getFieldValue('color');
+              
+                var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(colour_color);
+                var red = parseInt(result[1], 16);
+                var green = parseInt(result[2], 16);
+                var blue = parseInt(result[3], 16);
+                
+                var code = `for i in range(np.n): np[i] = (${red},${green}, ${blue})\nneo_on()\n`;
+                return code;
+              };
+              Blockly.Python['neopixel_toggle_iot'] = function(block) {
+               
+                Blockly.Python.definitions_['import_time'] = 'import time';
+                /*Blockly.Python.definitions_['import_time'] = 'import time';
+                Blockly.Python.definitions_['from_machine_pin'] = 'from machine import Pin';
+                Blockly.Python.definitions_['import_neopixel_neo'] = 'from neopixel import NeoPixel';
+              
+                Blockly.Python.definitions_['LED_PIN'] = 'LED_PIN = 4';
+                Blockly.Python.definitions_['LED_COUNT'] = 'LED_COUNT = 2';   */
+                Blockly.Python.definitions_['neo_toggle_state'] = 'np_toggle = False';   
+                
+                //Blockly.Python.definitions_['np_neo'] = 'np = NeoPixel(Pin(LED_PIN, Pin.OUT), LED_COUNT)'; 
+                
+            
+                
+                var tog_colors1 = block.getFieldValue('tog_color1');
+                var tog_colors2 = block.getFieldValue('tog_color2');
+              
+                var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(tog_colors1);
+                var red = parseInt(result[1], 16);
+                var green = parseInt(result[2], 16);
+                var blue = parseInt(result[3], 16);
+              
+                var result2 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(tog_colors2);
+                var red2 = parseInt(result2[1], 16);
+                var green2 = parseInt(result2[2], 16);
+                var blue2 = parseInt(result2[3], 16);
+              
+               
+                var functionName = Blockly.Python.provideFunction_(
+                  `neo_tog`,
+                  [`def ` + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + `():`,
+                  `  global np_toggle`,
+                  `  np_toggle = not np_toggle`,
+                  `  if np_toggle:`,
+                  `      for i in range(np.n):`,
+                  `          np[i] = (${red}, ${green}, ${blue})`,
+                  `          time.sleep(0.1) `,
+                  `  else:`,
+                  `      np.fill((${red2}, ${green2}, ${blue2}))`,
+                  `      time.sleep(0.1)`,
+                  `  neo_on()`]);
+              
+                var code = '#while True:\nneo_tog()\n'
+                //var code = `for i in range(np.n): np[i] = (${red},${green}, ${blue})\nnp.write()\n`;
+                return code;
+              };
+              Blockly.Python['rainbow_neo_iot'] = function(block) {
+                Blockly.Python.definitions_['import_time_sleep_ms'] = 'from time import sleep_ms';
+                
+                
+                
+                var functionName = Blockly.Python.provideFunction_(
+                  'rainbow_neo',
+                  [`def ` + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + `():`,
+                  `    global np`,
+                  `    global sleep_ms`,
+                  `    for j in range(256):`,
+                  `        for i in range(np.n):`,
+                  `            WheelPos = (i * 1 + j) % 256`,
+                  `            if WheelPos < 85:`,
+                  `                np[i] = (int(WheelPos * 3), int(255 - WheelPos * 3), 0)`,
+                  `            elif WheelPos < 170:`,
+                  `                WheelPos -= 85`,
+                  `                np[i] = (int(255 - WheelPos * 3), 0, int(WheelPos * 3))`,
+                  `            else:`,
+                  `                WheelPos -= 170`,
+                  `                np[i] = (0, int(WheelPos * 3), int(255 - WheelPos * 3))`,
+                  `        np.write()`,
+                  `        sleep_ms(5)`]
+              );
+              
+            
+                var code = 'rainbow_neo()\n'
+                
+                return code;
+              };
+              Blockly.Python['oled_init_iot'] = function(block) {
+                Blockly.Python.definitions_['from_micropython_import_const'] = 'from micropython import const';
+                Blockly.Python.definitions_['import_framebuf'] = 'import framebuf';
+                Blockly.Python.definitions_['import_oled'] = 'from machine import Pin, I2C';
+                Blockly.Python.definitions_['import_os'] = 'import os';
+                var functionName = Blockly.Python.provideFunction_(
+                'register_definitions',
+                [`# Register definitions`,
+                `SET_CONTRAST = 0x81`,
+                `SET_ENTIRE_ON = 0xA4`,
+                `SET_NORM_INV = 0xA6`,
+                `SET_DISP = 0xAE`,
+                `SET_MEM_ADDR = 0x20`,
+                `SET_COL_ADDR = 0x21`,
+                `SET_PAGE_ADDR = 0x22`,
+                `SET_DISP_START_LINE = 0x40`,
+                `SET_SEG_REMAP = 0xA0`,
+                `SET_MUX_RATIO = 0xA8`,
+                `SET_COM_OUT_DIR = 0xC0`,
+                `SET_DISP_OFFSET = 0xD3`,
+                `SET_COM_PIN_CFG = 0xDA`,
+                `SET_DISP_CLK_DIV = 0xD5`,
+                `SET_PRECHARGE = 0xD9`,
+                `SET_VCOM_DESEL = 0xDB`,
+                `SET_CHARGE_PUMP = 0x8D`
+                ]
+            );
+            
+            var functionName = Blockly.Python.provideFunction_(
+              `SSD1306`,
+              [`class SSD1306(framebuf.FrameBuffer):`,
+              `    def __init__(self, width, height, external_vcc):`,
+              `        self.width = width`,
+              `        self.height = height`,
+              `        self.external_vcc = external_vcc`,
+              `        self.pages = self.height // 8`,
+              `        self.buffer = bytearray(self.pages * self.width)`,
+              `        super().__init__(self.buffer, self.width, self.height, framebuf.MONO_VLSB)`,
+              `        self.init_display()`,
+              ``,
+              `    def init_display(self):`,
+              `        for cmd in (`,
+              `            SET_DISP | 0x00,  # off`,
+              `            # address setting`,
+              `            SET_MEM_ADDR,`,
+              `            0x00,  # horizontal`,
+              `            # resolution and layout`,
+              `            SET_DISP_START_LINE | 0x00,`,
+              `            SET_SEG_REMAP | 0x01,  # column addr 127 mapped to SEG0`,
+              `            SET_MUX_RATIO,`,
+              `            self.height - 1,`,
+              `            SET_COM_OUT_DIR | 0x08,  # scan from COM[N] to COM0`,
+              `            SET_DISP_OFFSET,`,
+              `            0x00,`,
+              `            SET_COM_PIN_CFG,`,
+              `            0x02 if self.width > 2 * self.height else 0x12,`,
+              `            # timing and driving scheme`,
+              `            SET_DISP_CLK_DIV,`,
+              `            0x80,`,
+              `            SET_PRECHARGE,`,
+              `            0x22 if self.external_vcc else 0xF1,`,
+              `            SET_VCOM_DESEL,`,
+              `            0x30,  # 0.83*Vcc`,
+              `            # display`,
+              `            SET_CONTRAST,`,
+              `            0xFF,  # maximum`,
+              `            SET_ENTIRE_ON,  # output follows RAM contents`,
+              `            SET_NORM_INV,  # not inverted`,
+              `            # charge pump`,
+              `            SET_CHARGE_PUMP,`,
+              `            0x10 if self.external_vcc else 0x14,`,
+              `            SET_DISP | 0x01,  # on`,
+              `        ):`,
+              `            self.write_cmd(cmd)`,
+              `        self.fill(0)`,
+              `        self.show()`,
+              ``,
+              `    def poweroff(self):`,
+              `        self.write_cmd(SET_DISP | 0x00)`,
+              ``,
+              `    def poweron(self):`,
+              `        self.write_cmd(SET_DISP | 0x01)`,
+              ``,
+              `    def contrast(self, contrast):`,
+              `        self.write_cmd(SET_CONTRAST)`,
+              `        self.write_cmd(contrast)`,
+              ``,
+              `    def invert(self, invert):`,
+              `        self.write_cmd(SET_NORM_INV | (invert & 1))`,
+              ``,
+              `    def show(self):`,
+              `        x0 = 0`,
+              `        x1 = self.width - 1`,
+              `        if self.width == 64:`,
+              `            # displays with width of 64 pixels are shifted by 32`,
+              `            x0 += 32`,
+              `            x1 += 32`,
+              `        self.write_cmd(SET_COL_ADDR)`,
+              `        self.write_cmd(x0)`,
+              `        self.write_cmd(x1)`,
+              `        self.write_cmd(SET_PAGE_ADDR)`,
+              `        self.write_cmd(0)`,
+              `        self.write_cmd(self.pages - 1)`,
+              
+              `        self.write_data(self.buffer)`]
+            );
+            
+            var functionName = Blockly.Python.provideFunction_(
+              'SSD1306_I2C',
+              [`class SSD1306_I2C(SSD1306):`,
+              `   def __init__(self, width, height, addr=0x3C, external_vcc=False):`,
+              `     machine = os.uname().machine`,
+              `     if ("KidBright32" in machine) or ("KidMotor V4" in machine):`,
+              `       self.i2c = I2C(1, scl=Pin(5), sda=Pin(4), freq=400000)`,
+              `     elif ("Mbits" in machine) or ("OpenBIT" in machine):`,
+              `       self.i2c = I2C(0, scl=Pin(21), sda=Pin(22), freq=400000)`,
+              `     else:`,
+              `       self.i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=400000)`,
+              `     self.addr = addr`,
+              `     self.temp = bytearray(2)`,
+              `     self.write_list = [b"\\40", None]  `,
+              `     super().__init__(width, height, external_vcc)`,
+              ``,
+              `   def write_cmd(self, cmd):`,
+              `     self.temp[0] = 0x80  # Co=1, D/C#=0`,
+              `     self.temp[1] = cmd`,
+              `     self.i2c.writeto(self.addr, self.temp)`,
+              ``,
+              `   def write_data(self, buf):`,
+              `     self.write_list[1] = buf`,
+              `     self.i2c.writevto(self.addr, self.write_list)`
+              ]
+            );
+            
+               
+                var dropdown_size = block.getFieldValue('size');
+              
+                var code = `oled = SSD1306_I2C(128, ${+dropdown_size == 0 ? 64 : 32})\n`;
+                return code;
+              };
+              
+              Blockly.Python['oled_draw_text_iot'] = function(block) {
+                Blockly.Python.definitions_['import_oled'] = 'import OLEDD';
+                
+                var value_text = Blockly.Python.valueToCode(block, 'text', Blockly.Python.ORDER_ATOMIC);
+                var value_x = Blockly.Python.valueToCode(block, 'x', Blockly.Python.ORDER_ATOMIC);
+                var value_y = Blockly.Python.valueToCode(block, 'y', Blockly.Python.ORDER_ATOMIC);
+              
+                var code = `oled.text(${value_text}, ${value_x}, ${value_y}, 1); oled.show()\n`;
+                return code;
+              };
+              
+              Blockly.Python['oled_draw_line'] = function(block) {
+                Blockly.Python.definitions_['import_oled'] = 'import OLEDD';
+              
+                var value_x1 = Blockly.Python.valueToCode(block, 'x1', Blockly.Python.ORDER_ATOMIC);
+                var value_y1 = Blockly.Python.valueToCode(block, 'y1', Blockly.Python.ORDER_ATOMIC);
+                var value_x2 = Blockly.Python.valueToCode(block, 'x2', Blockly.Python.ORDER_ATOMIC);
+                var value_y2 = Blockly.Python.valueToCode(block, 'y2', Blockly.Python.ORDER_ATOMIC);
+              
+                var code = `oled.line(${value_x1}, ${value_y1}, ${value_x2}, ${value_y2}, 1); oled.show()\n`;
+                return code;
+              };
+              
+              Blockly.Python['oled_draw_rect'] = function(block) {
+                Blockly.Python.definitions_['import_oled'] = 'import OLEDD';
+              
+                var value_x = Blockly.Python.valueToCode(block, 'x', Blockly.Python.ORDER_ATOMIC);
+                var value_y = Blockly.Python.valueToCode(block, 'y', Blockly.Python.ORDER_ATOMIC);
+                var value_width = Blockly.Python.valueToCode(block, 'width', Blockly.Python.ORDER_ATOMIC);
+                var value_height = Blockly.Python.valueToCode(block, 'height', Blockly.Python.ORDER_ATOMIC);
+                var dropdown_fill = block.getFieldValue('fill');
+              
+                var code = `oled.${(+dropdown_fill) ? 'fill_rect' : 'rect'}(${value_x}, ${value_y}, ${value_width}, ${value_height}, 1); oled.show()\n`;
+                return code;
+              };
+              
+              Blockly.Python['oled_fill'] = function(block) {
+                var code = 'oled.fill(1); oled.show()\n';
+                return code;
+              };
+              
+              Blockly.Python['oled_clear'] = function(block) {
+                var code = 'oled.fill(0); oled.show()\n';
+                return code;
+              };
 
-    var functionName = Blockly.Python.provideFunction_(
-        'task()',
-        ['def ' + 'task' + '(_=None):',
-        globals,
-        statements_callback]);
-
-    var code = '';;
-    if(dropdown_pin == 1){
-        code = `sw_a_put()\n`
-    }
-    else if(dropdown_pin == 2){
-        code = `sw_b_put()\n`
-    }
-    else{
-        code = `404`
-    }
-    //var code = `a_put()\n`;
-    return code;
-};
-// ------------------------------------------------------------------------------------------------------
-Blockly.Python['switch_on_release_beetle'] = function(block) {
-    Blockly.Python.definitions_['import_switch'] = 'import switch';
-
-    var dropdown_pin = block.getFieldValue('pin');
-    var statements_callback = Blockly.Python.statementToCode(block, 'callback');
-
-    // -----------------------------
-    var globals = [];
-    var varName;
-    var workspace = block.workspace;
-    var variables = Blockly.Variables.allUsedVarModels(workspace) || [];
-    for (var i = 0, variable; variable = variables[i]; i++) {
-      varName = variable.name;
-      if (block.getVars().indexOf(varName) == -1) {
-        globals.push(Blockly.Python.variableDB_.getName(varName,
-            Blockly.VARIABLE_CATEGORY_NAME));
-      }
-    }
-    // Add developer variables.
-    var devVarList = Blockly.Variables.allDeveloperVariables(workspace);
-    for (var i = 0; i < devVarList.length; i++) {
-      globals.push(Blockly.Python.variableDB_.getName(devVarList[i],
-          Blockly.Names.DEVELOPER_VARIABLE_TYPE));
-    }
-  
-    globals = globals.length ?
-        Blockly.Python.INDENT + 'global ' + globals.join(', ') + '\n' : '';
-    // -----------------------------
-
-    var functionName = Blockly.Python.provideFunction_(
-        dropdown_pin + 'ReleaseCB',
-        ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(_=None):',
-        globals,
-        statements_callback]);
-
-    var code = `switch.release(switch.${dropdown_pin}, ${functionName})\n`;
-    return code;
-};
-
-Blockly.Python['switch_on_pressed_beetle'] = function(block) {
-    Blockly.Python.definitions_['import_switch'] = 'import switch';
-
-    var dropdown_pin = block.getFieldValue('pin');
-    var statements_callback = Blockly.Python.statementToCode(block, 'callback');
-
-    // -----------------------------
-    var globals = [];
-    var varName;
-    var workspace = block.workspace;
-    var variables = Blockly.Variables.allUsedVarModels(workspace) || [];
-    for (var i = 0, variable; variable = variables[i]; i++) {
-      varName = variable.name;
-      if (block.getVars().indexOf(varName) == -1) {
-        globals.push(Blockly.Python.variableDB_.getName(varName,
-            Blockly.VARIABLE_CATEGORY_NAME));
-      }
-    }
-    // Add developer variables.
-    var devVarList = Blockly.Variables.allDeveloperVariables(workspace);
-    for (var i = 0; i < devVarList.length; i++) {
-      globals.push(Blockly.Python.variableDB_.getName(devVarList[i],
-          Blockly.Names.DEVELOPER_VARIABLE_TYPE));
-    }
-  
-    globals = globals.length ?
-        Blockly.Python.INDENT + 'global ' + globals.join(', ') + '\n' : '';
-    // -----------------------------
-
-    var functionName = Blockly.Python.provideFunction_(
-        dropdown_pin + 'PressCB',
-        ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(_=None):',
-        globals,
-        statements_callback]);
-
-    var code = `switch.pressed(switch.${dropdown_pin}, ${functionName})\n`;
-    return code;
-};
-
-Blockly.Python['abs_of'] = function(block) {
-  // Random integer between [X] and [Y].
-  var argument0 = Blockly.Python.valueToCode(block, 'FROM',
-      Blockly.Python.ORDER_NONE);
-  
-  var code = 'abs(' + argument0 + ')';
-  return [code, Blockly.Python.ORDER_FUNCTION_CALL];
-};
+              Blockly.Python['abs_of'] = function(block) {
+                // Random integer between [X] and [Y].
+                var argument0 = Blockly.Python.valueToCode(block, 'FROM',
+                    Blockly.Python.ORDER_NONE);
+                
+                var code = 'abs(' + argument0 + ')';
+                return [code, Blockly.Python.ORDER_FUNCTION_CALL];
+              };
