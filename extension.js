@@ -7,7 +7,7 @@
     icon: "/static/beetlecar.png",
     color: "#4A7CCC",
     blocks: [
-        [ 
+        
                         {
                             xml: '<label text="LED"></label>',
                         },
