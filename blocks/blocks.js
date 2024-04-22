@@ -1083,8 +1083,13 @@ Blockly.defineBlocksWithJsonArray([
   },
   {
     "type": "poten_ifelse",
-    "message0": "potentio %1 %2",
+    "message0": "potentio pin: %1 %2 %3",
     "args0": [
+      {
+        "type": "input_value",
+        "name": "pin",
+        "check": "Number"
+      },
       {
         "type": "field_dropdown",
         "name": "same",
@@ -1112,8 +1117,13 @@ Blockly.defineBlocksWithJsonArray([
   },
   {
     "type": "if_poten",
-    "message0": "potentio %1 %2",
+    "message0": "potentio pin: %1 %2 %3",
     "args0": [
+      {
+        "type": "input_value",
+        "name": "pin",
+        "check": "Number"
+      },
       {
         "type": "field_dropdown",
         "name": "same",
@@ -1135,36 +1145,7 @@ Blockly.defineBlocksWithJsonArray([
     "tooltip": "",
     "helpUrl": ""
   },
-  {
-    "type": "poten_ifelse2",
-    "message0": "ye %1 %2",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "same",
-        "options": [
-          [Blockly.Msg.mt_sigh , ">"],
-          [Blockly.Msg.lt_sigh , "<"],
-          
-        ]
-      },
-      {
-        "type": "input_value",
-        "name": "value",
-        "check": "Number"
-      },
-    ],
-    "message1": "%1",
-    "args1": [{
-      "type": "input_statement",
-      "name": "DO"
-    }],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": "#D4AC0D",
-    "tooltip": "",
-    "helpUrl": ""
-  },
+  
   //------------------------------------------------------------------
   {
     "type": "bool_tf",
