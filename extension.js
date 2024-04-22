@@ -65,6 +65,22 @@
                                 </block>
                             `
                         },
+                        {
+                            xml: `
+                                <block type="if_poten">
+                                    <value name="pin">
+                                        <shadow type="math_number">
+                                            <field name="NUM">32</field>
+                                        </shadow>
+                                    </value>
+                                    <value name="value">
+                                        <shadow type="math_number">
+                                            <field name="NUM">200</field>
+                                        </shadow>
+                                    </value>
+                                </block>
+                            `
+                        },
                         
                         
                         
