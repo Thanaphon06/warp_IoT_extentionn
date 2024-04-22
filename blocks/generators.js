@@ -489,76 +489,75 @@
     };
     //wifi_setting
     //read poten
+    Blockly.Python['read_poten'] = function (block) {
+      Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin';
+      Blockly.Python.definitions_['from_machine_import_adc'] = 'from machine import ADC';
     
-  Blockly.Python['read_poten'] = function (block) {
-    Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin';
-    Blockly.Python.definitions_['from_machine_import_adc'] = 'from machine import ADC';
-  
-    var function_adcRead = Blockly.Python.provideFunction_(
-        'adcRead',
-        ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(analog_pin):',
-        '  adc = ADC(Pin(analog_pin))',
-        '  adc.atten(ADC.ATTN_11DB)',
-        '  adc.width(ADC.WIDTH_12BIT)',
-        '  return adc.read()']);
-  
-    var dropdown_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
-  
-    var code = `${function_adcRead}(${dropdown_pin})`;
-    return [code, Blockly.Python.ORDER_NONE];
-  };
-  Blockly.Python['poten_ifelse'] = function(block) {
-    Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin';
-    Blockly.Python.definitions_['from_machine_import_adc'] = 'from machine import ADC';
-  
+      var function_adcRead = Blockly.Python.provideFunction_(
+          'adcRead',
+          ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(analog_pin):',
+          '  adc = ADC(Pin(analog_pin))',
+          '  adc.atten(ADC.ATTN_11DB)',
+          '  adc.width(ADC.WIDTH_12BIT)',
+          '  return adc.read()']);
     
-  
-    var branch = Blockly.Python.statementToCode(block, 'DO');
-    branch = Blockly.Python.addLoopTrap(branch, block) || Blockly.Python.PASS;
-    var loopVar = Blockly.Python.variableDB_.getDistinctName(
-        'count', Blockly.VARIABLE_CATEGORY_NAME);
-  
-    var value_number = Blockly.Python.valueToCode(block, 'value', Blockly.Python.ORDER_ATOMIC);
-    var math_choice = block.getFieldValue('same');
+      var dropdown_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
     
-  
-    var code = `if adcRead(34) ${math_choice} ${value_number}:\n`;
-        code += `${branch}`
-    return code;
-  };
-  Blockly.Python['if_poten'] = function (block) {
-    Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin';
-    Blockly.Python.definitions_['from_machine_import_adc'] = 'from machine import ADC';
-  
-    var function_adcRead = Blockly.Python.provideFunction_(
-        'adcRead',
-        ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(analog_pin):',
-        '  adc = ADC(Pin(analog_pin))',
-        '  adc.atten(ADC.ATTN_11DB)',
-        '  adc.width(ADC.WIDTH_12BIT)',
-        '  return adc.read()']);
-  
-    var value_number = Blockly.Python.valueToCode(block, 'value', Blockly.Python.ORDER_ATOMIC);
-    var math_choice = block.getFieldValue('same');
+      var code = `${function_adcRead}(${dropdown_pin})`;
+      return [code, Blockly.Python.ORDER_NONE];
+    };
+    Blockly.Python['poten_ifelse'] = function(block) {
+      Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin';
+      Blockly.Python.definitions_['from_machine_import_adc'] = 'from machine import ADC';
     
-    var code = `adcRead(34) ${math_choice} ${value_number}`;
-    return [code, Blockly.Python.ORDER_NONE];
-  };
-  Blockly.Python['poten_ifelse2'] = function(block) {
-    Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin';
-    Blockly.Python.definitions_['from_machine_import_adc'] = 'from machine import ADC';
-  
+      
     
-    var branch = Blockly.Python.statementToCode(block, 'DO');
-    // branch = Blockly.Python.addLoopTrap(branch, block) || Blockly.Python.PASS;
-    var value_number = Blockly.Python.valueToCode(block, 'value', Blockly.Python.ORDER_ATOMIC);
-    var math_choice = block.getFieldValue('same');
+      var branch = Blockly.Python.statementToCode(block, 'DO');
+      branch = Blockly.Python.addLoopTrap(branch, block) || Blockly.Python.PASS;
+      var loopVar = Blockly.Python.variableDB_.getDistinctName(
+          'count', Blockly.VARIABLE_CATEGORY_NAME);
     
-  
-    var code = `if adcRead(34) ${math_choice} ${value_number}: \n`;
-        code += `${branch}`
-    return code;
-  };
+      var value_number = Blockly.Python.valueToCode(block, 'value', Blockly.Python.ORDER_ATOMIC);
+      var math_choice = block.getFieldValue('same');
+      
+    
+      var code = `if adcRead(34) ${math_choice} ${value_number}:\n`;
+          code += `${branch}`
+      return code;
+    };
+    Blockly.Python['if_poten'] = function (block) {
+      Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin';
+      Blockly.Python.definitions_['from_machine_import_adc'] = 'from machine import ADC';
+    
+      var function_adcRead = Blockly.Python.provideFunction_(
+          'adcRead',
+          ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(analog_pin):',
+          '  adc = ADC(Pin(analog_pin))',
+          '  adc.atten(ADC.ATTN_11DB)',
+          '  adc.width(ADC.WIDTH_12BIT)',
+          '  return adc.read()']);
+    
+      var value_number = Blockly.Python.valueToCode(block, 'value', Blockly.Python.ORDER_ATOMIC);
+      var math_choice = block.getFieldValue('same');
+      
+      var code = `adcRead(34) ${math_choice} ${value_number}`;
+      return [code, Blockly.Python.ORDER_NONE];
+    };
+    Blockly.Python['poten_ifelse2'] = function(block) {
+      Blockly.Python.definitions_['from_machine_import_pin'] = 'from machine import Pin';
+      Blockly.Python.definitions_['from_machine_import_adc'] = 'from machine import ADC';
+    
+      
+      var branch = Blockly.Python.statementToCode(block, 'DO');
+      // branch = Blockly.Python.addLoopTrap(branch, block) || Blockly.Python.PASS;
+      var value_number = Blockly.Python.valueToCode(block, 'value', Blockly.Python.ORDER_ATOMIC);
+      var math_choice = block.getFieldValue('same');
+      
+    
+      var code = `if adcRead(34) ${math_choice} ${value_number}: \n`;
+          code += `${branch}`
+      return code;
+    };
   Blockly.Python['controls_every'] = function(block) {
     Blockly.Python.definitions_['import_time'] = 'import time';
     Blockly.Python.definitions_['time.ticks'] = 'start_time = time.ticks_ms()';
